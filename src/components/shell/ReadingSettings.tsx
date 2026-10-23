@@ -1,6 +1,7 @@
 import { useStore } from '@nanostores/preact';
-import { useEffect, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
 import { $prefs, defaultPrefs, setPref, type Prefs } from '@/lib/client/prefs';
+import { useDismissable } from '@/lib/client/use-dismissable';
 import { $settingsOpen } from '@/lib/client/ui-state';
 import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
@@ -49,6 +50,10 @@ const THEME_GROUP: Group<'theme'> = {
   ],
 };
 
+const closeSettings = () => {
+  $settingsOpen.set(false);
+};
+
 const DIALOG_ID = 'reading-settings';
 const TITLE_ID = 'reading-settings-title';
 
@@ -58,27 +63,14 @@ export default function ReadingSettings() {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    dialogRef.current?.querySelector<HTMLElement>('[role="radio"][tabindex="0"]')?.focus();
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
-      $settingsOpen.set(false);
-      triggerRef.current?.focus();
-    };
-    const onPointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (dialogRef.current?.contains(target) || triggerRef.current?.contains(target)) return;
-      $settingsOpen.set(false);
-    };
-    document.addEventListener('keydown', onKeyDown);
-    document.addEventListener('pointerdown', onPointerDown);
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      document.removeEventListener('pointerdown', onPointerDown);
-    };
-  }, [open]);
+  useDismissable({
+    open,
+    onClose: closeSettings,
+    container: dialogRef,
+    trigger: triggerRef,
+    initialFocus: '[role="radio"][tabindex="0"]',
+    closeOnOutsideClick: true,
+  });
 
   const renderGroup = <K extends keyof Prefs>({ key, label, options }: Group<K>) => (
     <div class={styles.group} key={key}>
@@ -129,10 +121,7 @@ export default function ReadingSettings() {
               size={28}
               label="Close"
               class={styles.close}
-              onClick={() => {
-                $settingsOpen.set(false);
-                triggerRef.current?.focus();
-              }}
+              onClick={closeSettings}
             />
           </div>
           {renderGroup(SIZE_GROUP)}

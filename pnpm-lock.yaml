@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@astrojs/markdown-satteri':
+        specifier: 0.4.5
+        version: 0.4.5
       '@astrojs/preact':
         specifier: ^6.1.1
         version: 6.1.1(@babel/core@7.29.7)(@types/node@24.19.2)(preact@11.0.2)(yaml@2.9.1)
@@ -44,6 +47,9 @@ importers:
       preact:
         specifier: ^11.0.2
         version: 11.0.2(preact-render-to-string@6.8.1)
+      satteri:
+        specifier: ^0.10.5
+        version: 0.10.5
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.12

@@ -22,6 +22,7 @@
     "favicons": "node scripts/generate-favicons.mjs"
   },
   "dependencies": {
+    "@astrojs/markdown-satteri": "0.4.5",
     "@astrojs/preact": "^6.1.1",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
@@ -33,7 +34,8 @@
     "@supabase/supabase-js": "^2.118.0",
     "astro": "^7.4.2",
     "nanostores": "^1.5.5",
-    "preact": "^11.0.2"
+    "preact": "^11.0.2",
+    "satteri": "^0.10.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",

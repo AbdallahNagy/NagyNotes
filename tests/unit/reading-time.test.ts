@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { countWords, readingTime } from '@/lib/content/reading-time';
+import { countWords, minutesLeft, readingTime } from '@/lib/content/reading-time';
 
 const words = (count: number) => Array.from({ length: count }, () => 'word').join(' ');
 
@@ -41,5 +41,18 @@ describe('readingTime', () => {
     expect(readingTime(words(231))).toBe(2);
     expect(readingTime(words(460))).toBe(2);
     expect(readingTime(words(461))).toBe(3);
+  });
+});
+
+describe('minutesLeft', () => {
+  it('counts down with progress and rounds up', () => {
+    expect(minutesLeft(10, 0)).toBe(10);
+    expect(minutesLeft(10, 0.25)).toBe(8);
+    expect(minutesLeft(10, 0.95)).toBe(1);
+  });
+
+  it('never drops below one minute', () => {
+    expect(minutesLeft(10, 1)).toBe(1);
+    expect(minutesLeft(1, 0.5)).toBe(1);
   });
 });

@@ -21,3 +21,8 @@ export function scrollMainToElement(element: HTMLElement, gap = 24): void {
   const main = getMain();
   if (main) scrollMainTo(offsetInMain(element, main) - gap);
 }
+
+export function scrollMainToId(id: string): void {
+  const target = document.getElementById(id);
+  if (target) scrollMainToElement(target);
+}

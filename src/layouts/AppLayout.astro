@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Footer from '@/components/shell/Footer.astro';
 import Header from '@/components/shell/Header.astro';
+import ProgressBar from '@/components/shell/ProgressBar';
 import Sidebar from '@/components/shell/Sidebar';
 import { getContent } from '@/lib/content/load';
 import { buildPostIndex, buildSidebarTree } from '@/lib/content/navigation';
@@ -24,7 +25,7 @@ const index = buildPostIndex(library);
 <BaseLayout {...meta}>
   <div class="app" data-bottom-bar={hasBottomBar || undefined}>
     <Header />
-    <slot name="progress" />
+    <ProgressBar client:load transition:persist="progress" />
     <div class="body">
       <Sidebar
         client:load

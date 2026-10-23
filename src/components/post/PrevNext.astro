@@ -1,0 +1,77 @@
+---
+import Icon from '@/components/ui/Icon.astro';
+import type { PostNode } from '@/lib/content/types';
+
+interface Props {
+  prev: PostNode | null;
+  next: PostNode | null;
+  folderName: string;
+}
+
+const { prev, next, folderName } = Astro.props;
+---
+
+<nav class="prev-next" aria-label="More in this folder" data-pagefind-ignore>
+  {prev && (
+    <a class="card" href={prev.url}>
+      <span class="label">
+        <Icon name="arrow-left" />
+        Previous in {folderName}
+      </span>
+      <span class="title">{prev.title}</span>
+    </a>
+  )}
+  {next && (
+    <a class="card next" href={next.url}>
+      <span class="label">
+        Next in {folderName}
+        <Icon name="arrow-right" />
+      </span>
+      <span class="title">{next.title}</span>
+    </a>
+  )}
+</nav>
+
+<style>
+  .prev-next {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 56px;
+    font-family: var(--font-sans);
+    line-height: normal;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+  }
+
+  .next {
+    grid-column: -2;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-3);
+    font-size: 12px;
+  }
+
+  .title {
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 500;
+  }
+</style>

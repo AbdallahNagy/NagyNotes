@@ -1,0 +1,24 @@
+---
+import FolderView from '@/views/FolderView.astro';
+import PostView from '@/views/PostView.astro';
+import { getContent } from '@/lib/content/load';
+
+type RouteProps = { kind: 'post'; id: string } | { kind: 'folder'; id: string };
+
+export async function getStaticPaths() {
+  const { library } = await getContent();
+  const posts = [...library.posts.keys()].map((id) => ({
+    params: { path: id },
+    props: { kind: 'post', id } satisfies RouteProps,
+  }));
+  const folders = [...library.folders.keys()].map((id) => ({
+    params: { path: id },
+    props: { kind: 'folder', id } satisfies RouteProps,
+  }));
+  return [...posts, ...folders];
+}
+
+const props = Astro.props as RouteProps;
+---
+
+{props.kind === 'post' ? <PostView id={props.id} /> : <FolderView id={props.id} />}

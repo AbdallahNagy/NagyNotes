@@ -20,3 +20,8 @@ export function countWords(markdown: string): number {
 export function readingTime(markdown: string): number {
   return Math.max(1, Math.ceil(countWords(markdown) / WORDS_PER_MINUTE));
 }
+
+/** Minutes still to read at a scroll `progress` of 0-1, never less than one. */
+export function minutesLeft(readTime: number, progress: number): number {
+  return Math.max(1, Math.ceil(readTime * (1 - progress)));
+}

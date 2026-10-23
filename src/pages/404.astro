@@ -1,0 +1,46 @@
+---
+import AppLayout from '@/layouts/AppLayout.astro';
+---
+
+<AppLayout title="Page not found">
+  <div class="missing">
+    <h1>Page not found</h1>
+    <p>That page doesn't exist, or it has moved. Try the folders on the left, or head back home.</p>
+    <a class="home-link" href="/">
+      Back to the home page
+    </a>
+  </div>
+</AppLayout>
+
+<style>
+  .missing {
+    max-width: 780px;
+    padding: 64px clamp(20px, 5vw, 56px) 96px;
+  }
+
+  h1 {
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  p {
+    max-width: 52ch;
+    margin-top: 12px;
+    color: var(--ink-2);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .home-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--accent);
+    font-size: 15px;
+  }
+
+  .home-link:hover {
+    text-decoration: underline;
+  }
+</style>

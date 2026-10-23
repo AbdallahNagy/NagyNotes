@@ -85,9 +85,13 @@ const prefsScriptVars = {
     <slot />
     <Loader />
     <script>
+      import { initCodeCopy } from '@/lib/client/code-copy';
       import { initDocumentState } from '@/lib/client/document-state';
+      import { initReadingProgress } from '@/lib/client/reading-progress';
 
       initDocumentState();
+      initReadingProgress();
+      initCodeCopy();
     </script>
   </body>
 </html>
