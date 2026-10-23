@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/nocturne-7a9a7950-21d6-4276-a49f-1b9527b4dbe2/styles.css">
+<script src="_ds/nocturne-7a9a7950-21d6-4276-a49f-1b9527b4dbe2/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+body{--color-bg:#FAF8F3;--color-surface:#FAF8F3;--color-text:#2B2B2B;--color-neutral-100:#1F1F1F;--color-neutral-200:#2B2B2B;--color-neutral-300:#3D3D3D;--color-neutral-400:#6B6B6B;--color-neutral-500:#85827B;--color-neutral-600:#A19D94;--color-neutral-700:#C9C3B6;--color-neutral-800:#E6E1D6;--color-neutral-900:#F1EEE6;--color-accent:#3A5BA0;--color-accent-100:#1F3566;--color-accent-200:#2F4A85;--color-accent-300:#3A5BA0;--color-accent-700:#B9C7E6;--color-accent-800:#DDE4F3;--color-accent-900:#E9EEF8;--shadow-md:0 1px 3px rgba(60,50,30,.08),0 4px 14px rgba(60,50,30,.06);--page-bg:#EFEBE2}
+body[data-theme="sepia"]{--color-bg:#F4ECD8;--color-surface:#F4ECD8;--color-text:#3B3026;--color-neutral-100:#2A2119;--color-neutral-200:#3B3026;--color-neutral-300:#4A3D30;--color-neutral-400:#7A6A55;--color-neutral-500:#8E7E68;--color-neutral-600:#A8977E;--color-neutral-700:#CDBB9C;--color-neutral-800:#E6D9BE;--color-neutral-900:#EADFC7;--color-accent:#8A4B2A;--color-accent-100:#4E2814;--color-accent-200:#6E3A1F;--color-accent-300:#8A4B2A;--color-accent-700:#D9B89C;--color-accent-800:#EBD5BE;--color-accent-900:#EFDDC8;--page-bg:#E9DFC6}
+body[data-theme="dark"]{--color-bg:#1E1F24;--color-surface:#1E1F24;--color-text:#D6D6D6;--color-neutral-100:#E4E4E4;--color-neutral-200:#D6D6D6;--color-neutral-300:#C4C4C8;--color-neutral-400:#9A9AA3;--color-neutral-500:#82828B;--color-neutral-600:#6A6A72;--color-neutral-700:#4A4B53;--color-neutral-800:#34353C;--color-neutral-900:#26272E;--color-accent:#A9B4F5;--color-accent-100:#E3E7FD;--color-accent-200:#C6CDF9;--color-accent-300:#A9B4F5;--color-accent-700:#4A5390;--color-accent-800:#363D6B;--color-accent-900:#2B3052;--shadow-md:0 1px 3px rgba(0,0,0,.3);--page-bg:#17181C}
+body{margin:0;background:var(--page-bg);font-family:var(--font-body);color:var(--color-text)}
+a{color:var(--color-accent-300)}a:hover{color:var(--color-accent-200)}
+.dv-turn{padding:40px 44px 32px;scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:var(--color-accent-800);color:var(--color-accent-100);border-radius:4px;text-decoration:none}
+.dv-tname{font:500 15px/1.2 var(--font-heading);color:var(--color-text)}
+.dv-sub{font:400 13px/1.5 var(--font-body);color:var(--color-neutral-400);margin:0 0 28px;max-width:640px}
+.dv-grp{font:500 12px var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--color-neutral-500);margin:36px 0 14px}
+.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:var(--color-neutral-800);color:var(--color-neutral-100);border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 var(--font-body);color:var(--color-neutral-400)}
+.dv-card{max-width:100%;background:var(--color-surface);border:1px solid var(--color-neutral-800);border-radius:8px;box-shadow:var(--shadow-md);overflow:hidden;position:relative}
+.dv-opt:target .dv-oid{background:var(--color-accent-700);color:var(--color-accent-100)}
+.dv-next{margin:32px 0 0;font:12px/1.5 var(--font-body);color:var(--color-neutral-500)}
+.wf{font-family:'Kalam',cursive;color:var(--color-neutral-300);font-size:13px;line-height:1.35}
+.bar{display:flex;align-items:center;gap:12px;padding:8px 14px;border-bottom:1.5px dashed var(--color-neutral-700)}
+.logo{font-weight:700;color:var(--color-text);font-size:15px}
+.srch{border:1.5px dashed var(--color-neutral-700);border-radius:8px;padding:2px 10px;color:var(--color-neutral-500);font-size:12px}
+.ln{height:6px;border-radius:4px;background:var(--color-neutral-800);margin:8px 0}
+.bx{border:1.5px dashed var(--color-neutral-700);border-radius:8px}
+.code{border:1.5px dashed var(--color-neutral-700);border-radius:8px;padding:8px 10px;background:var(--color-neutral-900);font-size:11px;color:var(--color-neutral-500);position:relative}
+.ttl{font-weight:700;font-size:21px;color:var(--color-text);line-height:1.15}
+.h2{font-weight:700;font-size:14px;color:var(--color-neutral-200);margin-top:12px}
+.meta{font-size:11px;color:var(--color-neutral-500)}
+.crumb{font-size:11px;color:var(--color-neutral-500)}
+.note{font-family:'Kalam',cursive;font-size:14px;line-height:1.2;color:var(--color-accent-300);position:absolute}
+.ti{font-size:12.5px;padding:2px 8px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ti.f{color:var(--color-neutral-200)}.ti.p{color:var(--color-neutral-400)}
+.ti.on{background:var(--color-accent-900);color:var(--color-accent-200)}
+.ti.d1{padding-left:20px}.ti.d2{padding-left:34px}.ti.d3{padding-left:48px}.ti.d4{padding-left:62px}
+.side{border-right:1.5px dashed var(--color-neutral-700);padding:10px 6px;display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.shd{display:flex;align-items:center;font-size:11px;color:var(--color-neutral-500);padding:0 8px 6px}
+.row{display:flex;align-items:baseline;gap:8px}
+.chip{border:1.5px dashed var(--color-neutral-700);border-radius:999px;padding:1px 9px;font-size:11.5px;color:var(--color-neutral-300)}
+.acc{color:var(--color-accent-300)}
+.fade{opacity:.35}
+.img{border:1.5px dashed var(--color-neutral-700);border-radius:8px;background:linear-gradient(to top right,transparent calc(50% - 1px),var(--color-neutral-800) 50%,transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),var(--color-neutral-800) 50%,transparent calc(50% + 1px))}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t2" style="border-bottom:1.5px dashed var(--color-neutral-800)">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">From your answers: home, reader, folder page</span></div>
+<p class="dv-sub">Solo author, dev audience, unlimited folder depth, collapsible tree. Reader options include TOC, progress, font/theme controls, prev/next, copyable code, read time, comments and bookmarks. Builds on <a class="dv-oid" href="#1a">1a</a>, <a class="dv-oid" href="#1b">1b</a> and <a class="dv-oid" href="#1i">1i</a>.</p>
+
+<div class="dv-grp">Article reader</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Tree · article · sticky TOC, comments at the end</div>
+<div class="dv-card wf" style="width:860px;height:600px">
+<div class="bar"><span class="logo">▢ blogname</span><span class="srch" style="width:220px">⌕ search  ⌘K</span><span style="margin-left:auto">☆ Bookmarks</span><span>Aa</span><span>◐</span></div>
+<div style="height:3px;width:38%;background:var(--color-accent)"></div>
+<div style="display:grid;grid-template-columns:210px 1fr 150px;height:calc(100% - 43px)">
+<div class="side"><div class="shd"><span>FOLDERS</span><span style="margin-left:auto;font-size:14px">«</span></div>
+<sc-for list="{{ deepTree }}" as="it" hint-placeholder-count="12"><div class="{{ it.cls }}">{{ it.t }}</div></sc-for></div>
+<div style="padding:18px 36px 0;overflow:hidden">
+<div class="crumb">APIs / Authentication / OAuth 2.0</div>
+<div class="row" style="margin-top:6px"><div class="ttl" style="flex:1">The client credentials flow, end to end</div><span style="font-size:18px">☆</span></div>
+<div class="meta" style="margin:6px 0 10px">11 min read · Oct 18, 2026 · 7 comments</div>
+<div style="max-width:400px"><div class="ln"></div><div class="ln"></div><div class="ln" style="width:70%"></div>
+<div class="h2">Requesting a token</div><div class="ln"></div><div class="ln" style="width:85%"></div>
+<div class="code" style="margin:10px 0;padding-top:26px"><span style="position:absolute;left:10px;top:6px">bash</span><span style="position:absolute;right:8px;top:6px">⧉ copy</span>curl -X POST https://login…/token \<br>&nbsp;&nbsp;-d grant_type=client_credentials</div>
+<div class="ln"></div><div class="ln" style="width:60%"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px"><div class="bx" style="padding:6px 8px"><div class="meta">← Previous</div>API keys</div><div class="bx" style="padding:6px 8px;text-align:right"><div class="meta">Next →</div>Auth code + PKCE</div></div>
+<div class="h2" style="margin-top:16px">Comments (7)</div>
+<div class="bx" style="padding:6px 8px;margin-top:6px;color:var(--color-neutral-500)">write a comment…</div>
+</div></div>
+<div style="padding:22px 12px">
+<div style="font-size:11px;color:var(--color-neutral-500);margin-bottom:6px">ON THIS PAGE</div>
+<div style="font-size:12px">Overview</div><div class="acc" style="font-size:12px;margin-top:4px">● Requesting a token</div><div style="font-size:12px;margin-top:4px">Caching tokens</div><div style="font-size:12px;margin-top:4px">Common errors</div><div style="font-size:12px;margin-top:10px;color:var(--color-neutral-500)">↑ back to top</div>
+</div></div>
+<div class="note" style="left:20px;top:540px">« collapses tree;<br>article recenters</div>
+<div class="note" style="left:690px;top:200px">sticky while<br>scrolling</div>
+<div class="note" style="left:690px;top:330px">← language label<br>+ one-click copy</div>
+</div></div>
+
+<div class="dv-opt" id="2b"><div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Tree collapsed, reader settings open, TOC as a pill</div>
+<div class="dv-card wf" style="width:860px;height:600px">
+<div style="height:3px;width:55%;background:var(--color-accent)"></div>
+<div style="display:grid;grid-template-columns:40px 1fr;height:calc(100% - 3px)">
+<div style="border-right:1.5px dashed var(--color-neutral-700);display:flex;flex-direction:column;align-items:center;gap:16px;padding-top:14px;font-size:15px"><span>»</span><span>⌕</span><span>☆</span><span>◐</span></div>
+<div style="position:relative;overflow:hidden">
+<div class="bar" style="border:none;padding:10px 20px"><span class="chip">☰ On this page: Caching tokens ▾</span><span class="meta" style="margin-left:auto">6 min left</span><span class="chip acc">Aa</span></div>
+<div style="display:flex;justify-content:center;padding-top:20px">
+<div style="width:460px">
+<div class="crumb">APIs › Authentication › OAuth 2.0</div>
+<div class="ttl" style="font-size:26px;margin-top:8px">The client credentials flow, end to end</div>
+<div class="meta" style="margin:8px 0 16px">11 min read · ☆ bookmark · 7 comments ↓</div>
+<div class="ln"></div><div class="ln"></div><div class="ln" style="width:80%"></div>
+<div class="h2">Caching tokens</div><div class="ln"></div><div class="ln" style="width:70%"></div>
+<div class="code" style="margin:10px 0;padding-top:28px"><div style="position:absolute;left:0;right:0;top:0;display:flex;gap:12px;padding:5px 10px;border-bottom:1.5px dashed var(--color-neutral-700)"><span class="acc">C#</span><span>Node</span><span>Python</span><span style="margin-left:auto">⧉ copy</span></div>var token = await cache.GetOrAddAsync(…);</div>
+<div class="ln"></div><div class="ln" style="width:55%"></div>
+</div></div>
+<div class="bx" style="position:absolute;right:16px;top:44px;width:250px;padding:10px;background:var(--color-neutral-900);display:flex;flex-direction:column;gap:10px">
+<div class="row"><span>Size</span><span style="margin-left:auto">A− ━━●━━ A+</span></div>
+<div class="row"><span>Width</span><span style="margin-left:auto" class="chip">narrow</span><span class="chip acc">normal</span></div>
+<div class="row"><span>Font</span><span style="margin-left:auto" class="chip acc">Sans</span><span class="chip">Serif</span></div>
+<div class="row"><span>Theme</span><span style="margin-left:auto" class="chip acc">Dark</span><span class="chip">Light</span><span class="chip">Sepia</span></div>
+</div>
+</div></div>
+<div class="note" style="left:52px;top:520px">» brings tree back</div>
+<div class="note" style="left:700px;top:420px">← code tabs remember<br>your language</div>
+<div class="note" style="right:20px;top:240px">↑ saved per reader</div>
+</div></div>
+
+<div class="dv-opt" id="2c"><div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>TOC nested inside the tree, under the current post</div>
+<div class="dv-card wf" style="width:760px;height:600px">
+<div class="bar"><span class="logo">▢ blogname</span><span class="srch" style="margin-left:auto;width:180px">⌕ search  ⌘K</span><span>Aa</span><span>◐</span></div>
+<div style="display:grid;grid-template-columns:230px 1fr;height:calc(100% - 40px)">
+<div class="side"><div class="shd"><span>FOLDERS</span><span style="margin-left:auto;font-size:14px">«</span></div>
+<div class="ti f">▾ APIs</div><div class="ti f d1">▾ Authentication</div><div class="ti f d2">▾ OAuth 2.0</div>
+<div class="ti on d3">Client credentials</div>
+<div class="ti p d4" style="font-size:11.5px">· Overview</div><div class="ti d4 acc" style="font-size:11.5px">● Requesting a token</div><div class="ti p d4" style="font-size:11.5px">· Caching tokens</div><div class="ti p d4" style="font-size:11.5px">· Common errors</div>
+<div class="ti p d3">Auth code + PKCE</div><div class="ti p d2">API keys</div><div class="ti f d1">▸ Rate limiting</div><div class="ti f">▸ Business Applications</div><div class="ti f">▸ DevOps</div>
+<div class="shd" style="margin-top:14px"><span>☆ BOOKMARKS</span></div><div class="ti p">Custom steps</div><div class="ti p">Retry policies</div>
+</div>
+<div style="padding:22px 44px 0;overflow:hidden">
+<div class="row"><div class="ttl" style="flex:1">The client credentials flow, end to end</div><span style="font-size:18px" class="acc">★</span></div>
+<div class="meta" style="margin:6px 0 12px">11 min read · Oct 18, 2026</div>
+<div style="max-width:420px"><div class="ln"></div><div class="ln"></div><div class="ln" style="width:75%"></div><div class="h2">Requesting a token</div><div class="ln"></div><div class="ln" style="width:85%"></div>
+<div class="code" style="margin:10px 0">curl -X POST …/token<span style="position:absolute;right:8px;top:6px">⧉</span></div><div class="ln"></div><div class="ln" style="width:50%"></div>
+<div class="row" style="margin-top:18px;justify-content:space-between"><span>← API keys</span><span class="meta">2 of 3 in OAuth 2.0</span><span>Auth code + PKCE →</span></div>
+<div class="bx" style="padding:8px;margin-top:14px;text-align:center">Show 7 comments ▾</div>
+</div></div></div>
+<div class="note" style="left:16px;top:548px">↑ headings live in the tree;<br>no right column needed</div>
+<div class="note" style="left:420px;top:540px">comments stay folded<br>until asked for</div>
+</div></div>
+</div>
+
+<div class="dv-grp">Home</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2d"><div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>Tree + continue reading, bookmarks, latest</div>
+<div class="dv-card wf" style="width:720px;height:480px">
+<div class="bar"><span class="logo">▢ blogname</span><span class="srch" style="margin-left:auto;width:200px">⌕ search  ⌘K</span><span>About</span></div>
+<div style="display:grid;grid-template-columns:200px 1fr;height:calc(100% - 40px)">
+<div class="side"><div class="shd"><span>FOLDERS</span><span style="margin-left:auto;font-size:14px">«</span></div>
+<div class="ti f">▸ APIs <span class="meta">18</span></div><div class="ti f">▸ Business Applications <span class="meta">23</span></div><div class="ti f">▸ DevOps <span class="meta">6</span></div><div class="ti f">▸ Databases <span class="meta">4</span></div></div>
+<div style="padding:22px 30px;display:flex;flex-direction:column;gap:16px">
+<div><div class="ttl">Notes on business apps & APIs</div><div class="meta" style="margin-top:4px">one line about me and what I write about</div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div class="bx" style="padding:10px"><div class="meta">Continue reading</div><div style="color:var(--color-text)">Client credentials flow</div><div style="height:3px;background:var(--color-neutral-800);margin-top:6px"><div style="height:3px;width:60%;background:var(--color-accent)"></div></div></div>
+<div class="bx" style="padding:10px"><div class="meta">☆ Bookmarked (3)</div><div>Custom steps</div><div>Retry policies</div></div>
+</div>
+<div><div class="meta" style="margin-bottom:6px">LATEST</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div><div style="color:var(--color-text)">Client credentials flow</div><div class="meta">APIs / Authentication / OAuth 2.0 · 11 min · Oct 18</div></div>
+<div><div style="color:var(--color-text)">Web resources</div><div class="meta">Business Apps / Microsoft Dynamics · 5 min · Oct 12</div></div>
+<div><div style="color:var(--color-text)">Rate limiting basics</div><div class="meta">APIs · 7 min · Oct 3</div></div>
+</div></div>
+</div></div>
+<div class="note" style="left:420px;top:430px">folder path shows where each post lives</div>
+</div></div>
+
+<div class="dv-opt" id="2e"><div class="dv-olabel"><a class="dv-oid" href="#2e">2e</a>Search-first home</div>
+<div class="dv-card wf" style="width:600px;height:480px;padding:40px 44px;box-sizing:border-box">
+<div class="logo">▢ blogname</div>
+<div class="meta" style="margin-top:4px">Notes on business apps & APIs</div>
+<div class="srch" style="margin-top:22px;padding:10px 14px;font-size:14px">⌕ search posts, folders, code…   ⌘K</div>
+<div class="row" style="gap:6px;margin-top:10px;flex-wrap:wrap"><span class="chip">oauth</span><span class="chip">plugins</span><span class="chip">webhooks</span><span class="chip">retry</span></div>
+<div class="meta" style="margin:26px 0 8px">BROWSE</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div class="bx" style="padding:8px 10px"><div style="color:var(--color-text)">APIs</div><div class="meta">Authentication · Rate limiting · Webhooks</div></div>
+<div class="bx" style="padding:8px 10px"><div style="color:var(--color-text)">Business Applications</div><div class="meta">Microsoft Dynamics · Power Platform</div></div>
+<div class="bx" style="padding:8px 10px"><div style="color:var(--color-text)">DevOps</div><div class="meta">Pipelines · Environments</div></div>
+<div class="bx" style="padding:8px 10px"><div style="color:var(--color-text)">Databases</div><div class="meta">SQL · Indexing</div></div>
+</div>
+<div class="note" style="left:380px;top:40px">results search titles,<br>headings and code</div>
+</div></div>
+
+<div class="dv-opt" id="2f"><div class="dv-olabel"><a class="dv-oid" href="#2f">2f</a>Contents page with expandable outline</div>
+<div class="dv-card wf" style="width:500px;height:480px;padding:30px 40px;box-sizing:border-box">
+<div class="row"><div class="ttl" style="font-size:24px;flex:1">Contents</div><span class="meta">expand all ⇕</span></div>
+<div style="margin-top:16px;display:flex;flex-direction:column;gap:6px">
+<div style="color:var(--color-text);font-weight:700">▾ APIs</div>
+<div style="padding-left:18px">▾ Authentication</div>
+<div style="padding-left:36px">▾ OAuth 2.0</div>
+<div style="padding-left:54px;display:flex"><span class="acc">Client credentials</span><span style="flex:1;border-bottom:1.5px dotted var(--color-neutral-700);margin:0 6px 4px"></span><span class="meta">11 min</span></div>
+<div style="padding-left:54px;display:flex"><span>Auth code + PKCE ★</span><span style="flex:1;border-bottom:1.5px dotted var(--color-neutral-700);margin:0 6px 4px"></span><span class="meta">9 min</span></div>
+<div style="padding-left:36px;display:flex"><span>API keys ✓</span><span style="flex:1;border-bottom:1.5px dotted var(--color-neutral-700);margin:0 6px 4px"></span><span class="meta">5 min</span></div>
+<div style="padding-left:18px">▸ Rate limiting <span class="meta">· 4</span></div>
+<div style="color:var(--color-text);font-weight:700;margin-top:6px">▸ Business Applications <span class="meta">· 23</span></div>
+<div style="color:var(--color-text);font-weight:700">▸ DevOps <span class="meta">· 6</span></div>
+</div>
+<div class="note" style="left:40px;top:400px">✓ read · ★ bookmarked — stored locally</div>
+</div></div>
+</div>
+
+<div class="dv-grp">Folder overview</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2g"><div class="dv-olabel"><a class="dv-oid" href="#2g">2g</a>Intro, subfolders, then posts</div>
+<div class="dv-card wf" style="width:680px;height:480px;display:grid;grid-template-columns:190px 1fr">
+<div class="side"><div class="shd"><span>FOLDERS</span><span style="margin-left:auto;font-size:14px">«</span></div>
+<div class="ti f">▾ APIs</div><div class="ti on d1">▾ Authentication</div><div class="ti f d2">▸ OAuth 2.0</div><div class="ti p d2">API keys</div><div class="ti f d1">▸ Rate limiting</div><div class="ti f">▸ Business Apps</div></div>
+<div style="padding:20px 28px">
+<div class="crumb">APIs /</div><div class="ttl">Authentication</div>
+<div style="max-width:320px"><div class="ln"></div><div class="ln" style="width:65%"></div></div>
+<div class="meta" style="margin:16px 0 6px">SUBFOLDERS</div>
+<div class="row" style="gap:10px"><div class="bx" style="padding:6px 10px">OAuth 2.0 <span class="meta">· 3</span></div><div class="bx" style="padding:6px 10px">JWT <span class="meta">· 2</span></div></div>
+<div class="row" style="margin:18px 0 8px"><span class="meta">POSTS · 4</span><span class="meta" style="margin-left:auto">Newest ⇅</span></div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div><div style="color:var(--color-text)">API keys</div><div class="meta">5 min · Sep 22 · ✓ read</div></div>
+<div><div style="color:var(--color-text)">Basic vs bearer auth</div><div class="meta">4 min · Sep 10</div></div>
+</div></div></div></div>
+
+<div class="dv-opt" id="2h"><div class="dv-olabel"><a class="dv-oid" href="#2h">2h</a>Flat table of everything under the folder</div>
+<div class="dv-card wf" style="width:680px;height:480px;padding:22px 28px;box-sizing:border-box">
+<div class="crumb">APIs /</div>
+<div class="row"><div class="ttl" style="flex:1">Authentication</div><span class="srch">⌕ filter</span></div>
+<div class="meta" style="margin:4px 0 16px">9 posts across 2 subfolders</div>
+<div style="display:grid;grid-template-columns:1.6fr 1.2fr 60px 70px 20px;gap:8px 12px;font-size:12.5px">
+<span class="meta">TITLE ⇅</span><span class="meta">FOLDER</span><span class="meta">READ</span><span class="meta">DATE ⇅</span><span></span>
+<span style="color:var(--color-text)">Client credentials</span><span class="meta">OAuth 2.0</span><span>11m</span><span>Oct 18</span><span>☆</span>
+<span style="color:var(--color-text)">Auth code + PKCE</span><span class="meta">OAuth 2.0</span><span>9m</span><span>Oct 6</span><span class="acc">★</span>
+<span style="color:var(--color-text)">Validating JWTs</span><span class="meta">JWT</span><span>8m</span><span>Sep 28</span><span>☆</span>
+<span style="color:var(--color-text)">API keys</span><span class="meta">—</span><span>5m</span><span>Sep 22</span><span>☆</span>
+<span style="color:var(--color-text)">Basic vs bearer</span><span class="meta">—</span><span>4m</span><span>Sep 10</span><span>☆</span>
+</div>
+<div class="note" style="left:300px;top:400px">deep folders flattened;<br>sort by date or length</div>
+</div></div>
+
+<div class="dv-opt" id="2i"><div class="dv-olabel"><a class="dv-oid" href="#2i">2i</a>Folder as a series with progress</div>
+<div class="dv-card wf" style="width:560px;height:480px;padding:26px 34px;box-sizing:border-box">
+<div class="crumb">APIs / Authentication /</div>
+<div class="ttl">OAuth 2.0</div>
+<div class="row" style="margin:8px 0 18px"><div style="width:140px;height:4px;background:var(--color-neutral-800)"><div style="width:33%;height:4px;background:var(--color-accent)"></div></div><span class="meta">1 of 3 read · 25 min total</span></div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div class="row"><span class="acc">✓</span><div><div style="color:var(--color-text)">01 · What OAuth solves</div><div class="meta">5 min</div></div></div>
+<div class="row"><span class="acc">●</span><div><div style="color:var(--color-text)">02 · Client credentials</div><div class="meta">11 min · you're 60% in</div></div><span class="chip acc" style="margin-left:auto">Resume →</span></div>
+<div class="row"><span>○</span><div><div style="color:var(--color-text)">03 · Auth code + PKCE</div><div class="meta">9 min</div></div></div>
+</div>
+<div class="note" style="left:300px;top:390px">order set by me<br>in front-matter</div>
+</div></div>
+</div>
+
+<p class="dv-next">Try next: "go with <a class="dv-oid" href="#2a">2a</a> reader, <a class="dv-oid" href="#2d">2d</a> home and <a class="dv-oid" href="#2g">2g</a> folder" · "merge <a class="dv-oid" href="#2c">2c</a>'s in-tree TOC into <a class="dv-oid" href="#2a">2a</a>" · "take the picks to mid-fi"</p>
+</section>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Blog wireframes — first pass</span></div>
+<p class="dv-sub">Reader-first layouts with folder browsing on the left. Purple handwriting is annotation. Placeholder tree: Business Applications → Microsoft Dynamics → Custom steps, APIs → Authentication types.</p>
+
+<div class="dv-grp">Article reader</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Classic three-column: tree · article · on-this-page</div>
+<div class="dv-card wf" style="width:820px;height:520px">
+<div class="bar"><span class="logo">▢ blogname</span><span class="srch" style="flex:1;max-width:260px">⌕ search posts…  ⌘K</span><span style="margin-left:auto">◐</span><span>About</span></div>
+<div style="display:grid;grid-template-columns:200px 1fr 150px;height:calc(100% - 40px)">
+<div style="border-right:1.5px dashed var(--color-neutral-700);padding:12px 8px;display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ tree }}" as="it" hint-placeholder-count="10"><div class="{{ it.cls }}">{{ it.t }}</div></sc-for>
+</div>
+<div style="padding:18px 40px 0;overflow:hidden">
+<div class="crumb">Business Applications / Microsoft Dynamics / Custom steps</div>
+<div class="ttl" style="margin-top:6px">Writing custom workflow steps in Dynamics 365</div>
+<div class="meta" style="margin:6px 0 10px">8 min read · Oct 12, 2026</div>
+<div style="max-width:380px"><div class="ln"></div><div class="ln"></div><div class="ln" style="width:70%"></div>
+<div class="h2">Register the assembly</div><div class="ln"></div><div class="ln" style="width:85%"></div>
+<div class="code" style="margin:10px 0">public class MyStep : CodeActivity { … }<span style="position:absolute;right:8px;top:6px">⧉ copy</span></div>
+<div class="ln"></div><div class="ln" style="width:60%"></div></div>
+</div>
+<div style="padding:22px 12px">
+<div style="font-size:11px;color:var(--color-neutral-500);margin-bottom:6px">ON THIS PAGE</div>
+<div class="acc" style="font-size:12px">● Overview</div><div style="font-size:12px;margin-top:4px">Register the assembly</div><div style="font-size:12px;margin-top:4px">Input parameters</div><div style="font-size:12px;margin-top:4px">Debugging</div>
+</div>
+</div>
+<div class="note" style="left:448px;top:470px">↑ text column capped ~68ch</div>
+<div class="note" style="left:676px;top:180px">TOC highlights<br>as you scroll</div>
+<div class="note" style="left:20px;top:452px">current post's path<br>auto-expanded</div>
+</div></div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Focus mode: tree collapses to a rail, article centered</div>
+<div class="dv-card wf" style="width:820px;height:520px">
+<div style="height:3px;width:42%;background:var(--color-accent)"></div>
+<div style="display:grid;grid-template-columns:44px 1fr;height:calc(100% - 3px)">
+<div style="border-right:1.5px dashed var(--color-neutral-700);display:flex;flex-direction:column;align-items:center;gap:16px;padding-top:14px;font-size:16px"><span>☰</span><span>⌕</span><span>◐</span></div>
+<div style="padding:34px 0 0;display:flex;justify-content:center;overflow:hidden">
+<div style="width:420px">
+<div class="crumb">Microsoft Dynamics › Custom steps</div>
+<div class="ttl" style="font-size:25px;margin-top:8px">Writing custom workflow steps in Dynamics 365</div>
+<div class="meta" style="margin:8px 0 16px">8 min · 3 of 5 in this folder</div>
+<div class="img" style="height:90px;margin-bottom:10px"></div>
+<div class="ln"></div><div class="ln"></div><div class="ln" style="width:80%"></div><div class="ln"></div><div class="ln" style="width:55%"></div>
+<div class="h2">Register the assembly</div><div class="ln"></div><div class="ln" style="width:75%"></div>
+</div></div></div>
+<div class="bx" style="position:absolute;right:18px;bottom:18px;padding:6px 10px;display:flex;gap:10px;align-items:center;background:var(--color-surface)"><span>A−</span><span style="font-size:16px">A+</span><span>Serif / Sans</span><span>◐</span></div>
+<div class="note" style="left:56px;top:40px">← ☰ slides the folder<br>tree over the page</div>
+<div class="note" style="left:360px;top:10px">reading progress</div>
+<div class="note" style="right:22px;bottom:58px">reader controls, remembered</div>
+</div></div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>No sidebar: breadcrumb dropdowns browse the folders</div>
+<div class="dv-card wf" style="width:820px;height:520px">
+<div class="bar"><span class="logo">▢ blogname</span><span class="chip">Business Applications ▾</span><span>/</span><span class="chip">Microsoft Dynamics ▾</span><span>/</span><span class="chip acc">Custom steps ▾</span><span style="margin-left:auto">⌕</span></div>
+<div class="bx" style="position:absolute;left:258px;top:40px;width:170px;padding:6px;background:var(--color-neutral-900);z-index:2">
+<div class="ti p">Plugins</div><div class="ti on">Custom steps</div><div class="ti p">Web resources</div><div class="ti p">Security roles</div></div>
+<div style="display:flex;justify-content:center;padding-top:44px">
+<div style="width:440px">
+<div class="ttl" style="font-size:25px">Writing custom workflow steps in Dynamics 365</div>
+<div class="meta" style="margin:8px 0 14px">8 min read</div>
+<div class="ln"></div><div class="ln"></div><div class="ln" style="width:70%"></div><div class="ln"></div><div class="ln" style="width:85%"></div><div class="ln" style="width:50%"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px">
+<div class="bx" style="padding:8px 10px"><div class="meta">← Previous in folder</div><div>Plugins: the basics</div></div>
+<div class="bx" style="padding:8px 10px;text-align:right"><div class="meta">Next in folder →</div><div>Web resources</div></div>
+</div></div></div>
+<div class="note" style="left:440px;top:50px">← each crumb opens its<br>siblings / children</div>
+<div class="note" style="left:640px;top:420px">read the folder<br>like a series</div>
+</div></div>
+</div>
+
+<div class="dv-grp">Folder sidebar</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Tree with counts + recently read</div>
+<div class="dv-card wf" style="width:260px;height:460px;padding:14px 10px;box-sizing:border-box;display:flex;flex-direction:column;gap:2px">
+<div style="font-size:11px;color:var(--color-neutral-500);padding:0 8px 4px">RECENT</div>
+<div class="ti p">↺ Authentication types</div><div class="ti p">↺ Rate limiting</div>
+<div style="font-size:11px;color:var(--color-neutral-500);padding:12px 8px 4px;display:flex"><span>FOLDERS</span><span style="margin-left:auto">⇕ collapse all</span></div>
+<sc-for list="{{ treeCount }}" as="it" hint-placeholder-count="10"><div class="{{ it.cls }}" style="display:flex"><span>{{ it.t }}</span><span style="margin-left:auto;color:var(--color-neutral-600)">{{ it.n }}</span></div></sc-for>
+<div class="note" style="left:150px;top:420px">post counts</div>
+</div></div>
+
+<div class="dv-opt" id="1e"><div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Two panes: folders, then posts in that folder</div>
+<div class="dv-card wf" style="width:560px;height:460px;display:grid;grid-template-columns:150px 230px 1fr">
+<div style="border-right:1.5px dashed var(--color-neutral-700);padding:12px 6px;display:flex;flex-direction:column;gap:2px">
+<div class="ti f">Business Apps</div><div class="ti on d1">Microsoft Dynamics</div><div class="ti f d1">Power Platform</div><div class="ti f">APIs</div><div class="ti f">DevOps</div><div class="ti f">Databases</div>
+</div>
+<div style="border-right:1.5px dashed var(--color-neutral-700);padding:12px 10px;display:flex;flex-direction:column;gap:12px">
+<div style="color:var(--color-text);font-weight:700">Microsoft Dynamics <span class="meta">· 5</span></div>
+<div><div>Plugins: the basics</div><div class="meta">6 min · Sep 2</div></div>
+<div class="bx" style="padding:6px 8px;border-color:var(--color-accent-700)"><div class="acc">Custom steps</div><div class="meta">8 min · Oct 12</div></div>
+<div><div>Web resources</div><div class="meta">5 min · Oct 20</div></div>
+<div><div>Security roles</div><div class="meta">10 min · draft soon</div></div>
+</div>
+<div class="fade" style="padding:16px"><div class="ttl" style="font-size:15px">Custom steps</div><div class="ln"></div><div class="ln"></div><div class="ln"></div><div class="ln" style="width:60%"></div></div>
+<div class="note" style="left:160px;top:400px">titles + read time<br>before you click</div>
+</div></div>
+
+<div class="dv-opt" id="1f"><div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Filter-first tree</div>
+<div class="dv-card wf" style="width:260px;height:460px;padding:14px 10px;box-sizing:border-box;display:flex;flex-direction:column;gap:3px">
+<div class="srch" style="padding:4px 10px;margin-bottom:8px;color:var(--color-neutral-200)">⌕ auth|</div>
+<div class="ti f">▾ APIs</div>
+<div class="ti on d1"><b>Auth</b>entication types</div>
+<div class="ti p d1">OAuth 2.0 vs API keys <span class="meta">(<b>auth</b> in body)</span></div>
+<div class="ti f">▾ Business Applications</div>
+<div class="ti f d1">▾ Microsoft Dynamics</div>
+<div class="ti p d2">Server-to-server <b>auth</b></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:14px"><span class="chip">#security</span><span class="chip">#dotnet</span><span class="chip">#rest</span></div>
+<div class="note" style="left:20px;top:330px">tree filters live; folders<br>without matches hide</div>
+</div></div>
+</div>
+
+<div class="dv-grp">Home &amp; folder pages</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1g"><div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>Home: continue reading + folder shelves</div>
+<div class="dv-card wf" style="width:640px;height:460px">
+<div class="bar"><span class="logo">▢ blogname</span><span class="srch" style="margin-left:auto;width:200px">⌕ search…</span></div>
+<div style="padding:22px 28px;display:flex;flex-direction:column;gap:16px">
+<div><div class="ttl">Notes on business apps & APIs</div><div class="meta" style="margin-top:4px">one line about who writes this and why</div></div>
+<div class="bx" style="padding:10px 12px;display:flex;align-items:center;gap:14px;max-width:420px"><div style="flex:1"><div class="meta">Continue reading</div><div style="color:var(--color-text)">Authentication types</div><div style="height:3px;background:var(--color-neutral-800);margin-top:6px"><div style="height:3px;width:60%;background:var(--color-accent)"></div></div></div><span>→</span></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+<div class="bx" style="padding:10px"><div style="color:var(--color-text)">Business Apps</div><div class="meta">2 folders · 14 posts</div><div class="ln" style="width:80%"></div><div class="ln" style="width:60%"></div></div>
+<div class="bx" style="padding:10px"><div style="color:var(--color-text)">APIs</div><div class="meta">9 posts</div><div class="ln" style="width:70%"></div><div class="ln" style="width:85%"></div></div>
+<div class="bx" style="padding:10px"><div style="color:var(--color-text)">DevOps</div><div class="meta">6 posts</div><div class="ln" style="width:75%"></div><div class="ln" style="width:50%"></div></div>
+</div>
+<div><div class="meta" style="margin-bottom:4px">LATEST</div><div>Web resources <span class="meta">· Microsoft Dynamics · Oct 20</span></div><div style="margin-top:4px">Rate limiting <span class="meta">· APIs · Oct 15</span></div></div>
+</div></div></div>
+
+<div class="dv-opt" id="1h"><div class="dv-olabel"><a class="dv-oid" href="#1h">1h</a>Home as a book's contents page</div>
+<div class="dv-card wf" style="width:460px;height:460px;padding:30px 40px;box-sizing:border-box">
+<div class="ttl" style="font-size:24px">Contents</div>
+<div style="margin-top:16px;display:flex;flex-direction:column;gap:6px">
+<div style="color:var(--color-text);font-weight:700">I. Business Applications</div>
+<div style="padding-left:18px">Microsoft Dynamics</div>
+<div style="padding-left:36px;display:flex"><span>Plugins: the basics</span><span style="flex:1;border-bottom:1.5px dotted var(--color-neutral-700);margin:0 6px 4px"></span><span class="meta">6 min</span></div>
+<div style="padding-left:36px;display:flex"><span class="acc">Custom steps</span><span style="flex:1;border-bottom:1.5px dotted var(--color-neutral-700);margin:0 6px 4px"></span><span class="meta">8 min</span></div>
+<div style="padding-left:18px">Power Platform</div>
+<div style="color:var(--color-text);font-weight:700;margin-top:8px">II. APIs</div>
+<div style="padding-left:18px;display:flex"><span>Authentication types</span><span style="flex:1;border-bottom:1.5px dotted var(--color-neutral-700);margin:0 6px 4px"></span><span class="meta">12 min</span></div>
+<div style="padding-left:18px;display:flex"><span>Rate limiting</span><span style="flex:1;border-bottom:1.5px dotted var(--color-neutral-700);margin:0 6px 4px"></span><span class="meta">7 min</span></div>
+<div style="color:var(--color-text);font-weight:700;margin-top:8px">III. DevOps</div>
+</div>
+<div class="note" style="left:260px;top:30px">whole library<br>at a glance</div>
+</div></div>
+
+<div class="dv-opt" id="1i"><div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>Folder page: intro + ordered posts</div>
+<div class="dv-card wf" style="width:560px;height:460px;display:grid;grid-template-columns:170px 1fr">
+<div style="border-right:1.5px dashed var(--color-neutral-700);padding:12px 6px;display:flex;flex-direction:column;gap:2px">
+<div class="ti f">▾ Business Apps</div><div class="ti on d1">Microsoft Dynamics</div><div class="ti f d1">▸ Power Platform</div><div class="ti f">▸ APIs</div><div class="ti f">▸ DevOps</div>
+</div>
+<div style="padding:20px 26px">
+<div class="crumb">Business Applications /</div>
+<div class="ttl">Microsoft Dynamics</div>
+<div style="max-width:300px"><div class="ln"></div><div class="ln" style="width:70%"></div></div>
+<div style="display:flex;gap:6px;margin:10px 0 16px"><span class="chip">Start here →</span><span class="chip">Newest first ⇅</span></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;gap:10px"><span class="meta">01</span><div><div style="color:var(--color-text)">Plugins: the basics</div><div class="meta">6 min · ✓ read</div></div></div>
+<div style="display:flex;gap:10px"><span class="meta">02</span><div><div style="color:var(--color-text)">Custom steps</div><div class="meta">8 min</div></div></div>
+<div style="display:flex;gap:10px"><span class="meta">03</span><div><div style="color:var(--color-text)">Web resources</div><div class="meta">5 min</div></div></div>
+</div></div>
+<div class="note" style="left:380px;top:300px">← numbered when<br>order matters</div>
+</div></div>
+</div>
+
+<div class="dv-grp">Mobile</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1j"><div class="dv-olabel"><a class="dv-oid" href="#1j">1j</a>Mobile reader + folder drawer</div>
+<div style="display:flex;gap:20px">
+<div class="dv-card wf" style="width:260px;height:520px;border-radius:24px">
+<div class="bar"><span>☰</span><span class="crumb" style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Dynamics › Custom steps</span><span>Aa</span></div>
+<div style="height:3px;width:30%;background:var(--color-accent)"></div>
+<div style="padding:16px 18px">
+<div class="ttl" style="font-size:19px">Writing custom workflow steps</div>
+<div class="meta" style="margin:6px 0 10px">8 min read</div>
+<div class="ln"></div><div class="ln"></div><div class="ln" style="width:70%"></div><div class="ln"></div>
+<div class="code" style="margin:10px 0;overflow:hidden;white-space:nowrap">public class MyStep : Code… ⇢</div>
+<div class="ln"></div><div class="ln" style="width:60%"></div><div class="ln"></div>
+</div>
+<div style="position:absolute;left:0;right:0;bottom:0;border-top:1.5px dashed var(--color-neutral-700);display:flex;justify-content:space-between;padding:10px 16px;background:var(--color-surface)"><span>← Plugins</span><span>☰ TOC</span><span>Web res →</span></div>
+</div>
+<div class="dv-card wf" style="width:260px;height:520px;border-radius:24px">
+<div style="position:absolute;inset:0;padding:16px 10px;box-sizing:border-box;display:flex;flex-direction:column;gap:3px;width:210px;background:var(--color-neutral-900);border-right:1.5px dashed var(--color-neutral-700)">
+<div class="srch" style="margin-bottom:8px">⌕ filter…</div>
+<sc-for list="{{ tree }}" as="it" hint-placeholder-count="10"><div class="{{ it.cls }}">{{ it.t }}</div></sc-for>
+</div>
+<div class="note" style="left:150px;top:440px">drawer, swipe<br>to close →</div>
+</div>
+</div></div>
+</div>
+
+<p class="dv-next">Try next: "combine <a class="dv-oid" href="#1b">1b</a> focus mode with the <a class="dv-oid" href="#1e">1e</a> two-pane browser" · "push <a class="dv-oid" href="#1a">1a</a> to mid-fi in Nocturne" · "explore search and tags"</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;sepia&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'sepia'|'dark'&quot;}}">
+class Component extends DCLogic {
+  applyTheme() { document.body.dataset.theme = this.props.theme ?? 'light'; }
+  componentDidMount() { this.applyTheme(); }
+  componentDidUpdate() { this.applyTheme(); }
+  renderVals() {
+    const raw = [
+      ['▾ Business Applications', 0, 'f', 14], ['▾ Microsoft Dynamics', 1, 'f', 5], ['Plugins', 2, 'p'], ['Custom steps', 2, 'on'], ['Web resources', 2, 'p'],
+      ['▸ Power Platform', 1, 'f', 9], ['▾ APIs', 0, 'f', 9], ['Authentication types', 1, 'p'], ['Rate limiting', 1, 'p'], ['▸ DevOps', 0, 'f', 6], ['▸ Databases', 0, 'f', 4]
+    ];
+    const map = r => ({ t: r[0], n: r[3] ?? '', cls: `ti ${r[2]} d${r[1]}` });
+    const deep = [
+      ['▾ APIs', 0, 'f'], ['▾ Authentication', 1, 'f'], ['▾ OAuth 2.0', 2, 'f'], ['Client credentials', 3, 'on'], ['Auth code + PKCE', 3, 'p'],
+      ['API keys', 2, 'p'], ['▸ Rate limiting', 1, 'f'], ['▾ Business Applications', 0, 'f'], ['▾ Microsoft Dynamics', 1, 'f'], ['▸ Plugins', 2, 'f'],
+      ['Custom steps', 2, 'p'], ['▸ Power Platform', 1, 'f'], ['▸ DevOps', 0, 'f']
+    ];
+    return { tree: raw.map(map), treeCount: raw.map(map), deepTree: deep.map(map) };
+  }
+}
+</script>
+</body>
+</html>
