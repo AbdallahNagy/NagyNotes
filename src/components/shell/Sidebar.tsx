@@ -13,10 +13,14 @@ import {
   toggleFolder,
 } from '@/lib/client/library-state';
 import { useMediaQuery } from '@/lib/client/use-media-query';
+import { useSearch } from '@/lib/client/use-search';
 import { $drawerOpen } from '@/lib/client/ui-state';
 import { foldersToReveal, normalizePath } from '@/lib/content/sidebar-tree';
 import type { PostIndexEntry, SidebarNode } from '@/lib/content/types';
 import { FolderTree } from './FolderTree';
+import { RecentList } from './RecentList';
+import { SearchResults } from './SearchResults';
+import { SidebarFilter } from './SidebarFilter';
 import { useDrawer } from './use-drawer';
 import styles from './Sidebar.module.css';
 
@@ -29,6 +33,9 @@ interface SidebarProps {
 
 export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
   const [currentPath, setCurrentPath] = useState(normalizePath(initialPath));
+  const [query, setQuery] = useState('');
+  const filterRef = useRef<HTMLInputElement>(null);
+  const matches = useSearch(query, index);
   const serverState = useMemo(
     () => ({ expanded: foldersToReveal(tree, initialPath), rail: false }),
     [tree, initialPath],
@@ -54,6 +61,11 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
     document.addEventListener('astro:page-load', reveal);
     return () => document.removeEventListener('astro:page-load', reveal);
   }, [tree]);
+
+  const expandAndFilter = () => {
+    setSidebarRail(false);
+    requestAnimationFrame(() => filterRef.current?.focus());
+  };
 
   const expanded = useMemo(() => new Set(sidebar.expanded), [sidebar.expanded]);
   const bookmarkSet = useMemo(() => new Set(bookmarks), [bookmarks]);
@@ -91,37 +103,32 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
               onClick={() => $drawerOpen.set(false)}
             />
           </div>
+          <div class={styles.filterBox}>
+            <SidebarFilter value={query} onInput={setQuery} inputRef={filterRef} />
+          </div>
           <div class={styles.scroll}>
-            {recentEntries.length > 0 && (
-              <section aria-label="Recent">
-                <div class={styles.sectionLabel}>Recent</div>
-                <ul class={styles.recentList}>
-                  {recentEntries.map((entry) => (
-                    <li key={entry.id}>
-                      <a class={styles.recent} href={entry.url}>
-                        <Icon name="clock-counter-clockwise" size={14} />
-                        <span class={styles.recentTitle}>{entry.title}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
+            {matches === null && <RecentList entries={recentEntries} />}
             <div class={styles.foldersHeader}>
-              <span class={styles.sectionLabelInline}>Folders</span>
+              <span class={styles.sectionLabelInline}>
+                {matches === null ? 'Folders' : 'Matches'}
+              </span>
               <button type="button" class={styles.collapseAll} onClick={collapseAllFolders}>
                 Collapse all
               </button>
             </div>
-            <nav aria-label="Folders">
-              <FolderTree
-                nodes={tree}
-                expanded={expanded}
-                currentPath={currentPath}
-                bookmarks={bookmarkSet}
-                progress={progress}
-                onToggle={toggleFolder}
-              />
+            <nav aria-label={matches === null ? 'Folders' : 'Search results'}>
+              {matches === null ? (
+                <FolderTree
+                  nodes={tree}
+                  expanded={expanded}
+                  currentPath={currentPath}
+                  bookmarks={bookmarkSet}
+                  progress={progress}
+                  onToggle={toggleFolder}
+                />
+              ) : (
+                <SearchResults results={matches} query={query} currentPath={currentPath} />
+              )}
             </nav>
           </div>
         </div>
@@ -131,6 +138,7 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
             label="Show folders"
             onClick={() => setSidebarRail(false)}
           />
+          <IconButton icon="magnifying-glass" label="Filter posts" onClick={expandAndFilter} />
           <a class={styles.railLink} href="/" aria-label="Home" title="Home">
             <Icon name="house" size={18} />
           </a>

@@ -42,7 +42,6 @@
 }
 
 .heading,
-.sectionLabel,
 .sectionLabelInline {
   color: var(--ink-3);
   font-size: 11px;
@@ -62,46 +61,15 @@
   color: var(--ink);
 }
 
+.filterBox {
+  flex: none;
+  padding: 2px 12px 8px;
+}
+
 .scroll {
   flex: 1;
   padding: 0 8px 24px;
   overflow-y: auto;
-}
-
-.sectionLabel {
-  padding: 12px 8px 6px;
-}
-
-.recentList {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.recent {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 8px;
-  border-radius: var(--radius-sm);
-  color: var(--ink-2);
-  font-size: 14px;
-}
-
-.recent:hover {
-  background: var(--hover);
-}
-
-.recent svg {
-  flex: none;
-  color: var(--ink-3);
-}
-
-.recentTitle {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .foldersHeader {

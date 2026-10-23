@@ -54,7 +54,7 @@ export const codeBlockPlugin = defineHastPlugin({
   element: {
     filter: ['pre'],
     visit(node) {
-      const header = element('div', { className: ['code-block__header'] }, [
+      const header = element('div', { className: ['code-block__header'], dataPagefindIgnore: '' }, [
         element('span', { className: ['code-block__lang'] }, [
           { type: 'text', value: languageOf(node) },
         ]),

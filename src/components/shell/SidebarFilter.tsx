@@ -1,0 +1,33 @@
+import type { Ref } from 'preact';
+import { Icon } from '@/components/ui/Icon';
+import styles from './SidebarFilter.module.css';
+
+interface SidebarFilterProps {
+  value: string;
+  onInput: (value: string) => void;
+  inputRef: Ref<HTMLInputElement>;
+}
+
+export function SidebarFilter({ value, onInput, inputRef }: SidebarFilterProps) {
+  return (
+    <label class={styles.filter}>
+      <Icon name="magnifying-glass" size={15} />
+      <input
+        ref={inputRef}
+        type="search"
+        class={styles.input}
+        value={value}
+        placeholder="Filter posts…"
+        aria-label="Filter posts"
+        autocomplete="off"
+        onInput={(event) => onInput(event.currentTarget.value)}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape' && value !== '') {
+            event.stopPropagation();
+            onInput('');
+          }
+        }}
+      />
+    </label>
+  );
+}

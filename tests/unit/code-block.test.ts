@@ -10,7 +10,7 @@ describe('codeBlockPlugin', () => {
     const html = render('```bash\necho hi\n```\n');
 
     expect(html).toContain('<figure class="code-block">');
-    expect(html).toContain('<div class="code-block__header">');
+    expect(html).toContain('<div class="code-block__header"');
     expect(html).toMatch(/<pre><code class="language-bash">echo hi\n<\/code><\/pre><\/figure>/);
   });
 
@@ -31,6 +31,10 @@ describe('codeBlockPlugin', () => {
     expect(html).toContain('<button type="button" class="code-copy" aria-label="Copy code">');
     expect(html).toContain('<span class="code-copy__label">Copy</span>');
     expect(html.match(/<svg /g)).toHaveLength(2);
+  });
+
+  it('keeps the header (label and Copy button) out of the search index', () => {
+    expect(render('```js\n1\n```\n')).toContain('data-pagefind-ignore');
   });
 
   it('wraps every block and leaves other content alone', () => {
