@@ -1,0 +1,27 @@
+.group {
+  display: flex;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.spaced {
+  gap: 2px;
+}
+
+.segment {
+  flex: 1;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-2);
+  font-size: 13px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.checked {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 500;
+}

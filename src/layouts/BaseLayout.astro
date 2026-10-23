@@ -1,0 +1,113 @@
+---
+import '@fontsource-variable/inter/wght.css';
+import '@fontsource-variable/source-serif-4/opsz.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import serifLatin from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-opsz-normal.woff2?url';
+import { ClientRouter } from 'astro:transitions';
+import '@/styles/tokens.css';
+import '@/styles/base.css';
+import { SITE } from '@/config/site';
+import { STORAGE_KEYS } from '@/lib/client/storage-keys';
+import { PREF_OPTIONS, defaultPrefs } from '@/lib/client/prefs';
+import Loader from '@/components/shell/Loader.astro';
+
+interface Props {
+  /** Page title; the site name is appended. Omit on the home page. */
+  title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+  /** ISO date, for articles. */
+  publishedTime?: string;
+}
+
+const { title, description = SITE.description, type = 'website', publishedTime } = Astro.props;
+const fullTitle = title ? `${title} · ${SITE.name}` : SITE.name;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const prefsScriptVars = {
+  keys: STORAGE_KEYS,
+  options: PREF_OPTIONS,
+  defaults: defaultPrefs(false),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={serifLatin} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    <meta name="twitter:card" content="summary" />
+
+    <!-- Runs before first paint so the saved theme and layout never flash. Mirrors lib/client/prefs.ts. -->
+    <script is:inline define:vars={prefsScriptVars}>
+      const root = document.documentElement;
+      const prefs = { ...defaults };
+      if (matchMedia('(prefers-color-scheme: dark)').matches) prefs.theme = 'dark';
+      try {
+        const saved = JSON.parse(localStorage.getItem(keys.prefs) ?? 'null');
+        if (saved && typeof saved === 'object') {
+          for (const name of Object.keys(options)) {
+            if (options[name].includes(saved[name])) prefs[name] = saved[name];
+          }
+        }
+        const sidebar = JSON.parse(localStorage.getItem(keys.sidebar) ?? 'null');
+        if (sidebar && sidebar.rail === true) root.setAttribute('data-rail', '');
+      } catch {}
+      try {
+        if (sessionStorage.getItem(keys.loaderSeen)) root.setAttribute('data-loaded', '');
+      } catch {}
+      for (const name of Object.keys(prefs)) root.dataset[name] = prefs[name];
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <slot />
+    <Loader />
+    <script>
+      import { initDocumentState } from '@/lib/client/document-state';
+
+      initDocumentState();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .skip-link {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 100;
+    padding: 8px 14px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    color: var(--ink);
+    font-size: 14px;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus {
+    transform: none;
+  }
+</style>

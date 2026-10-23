@@ -1,0 +1,56 @@
+---
+import { SITE } from '@/config/site';
+import Icon from '@/components/ui/Icon.astro';
+---
+
+<footer class="footer">
+  <span class="mark">
+    nn<span class="dot">.</span>
+  </span>
+  <span>Written by {SITE.author}</span>
+  <span class="spacer"></span>
+  <button type="button" class="top" data-back-to-top>
+    <Icon name="arrow-up" />
+    Back to top
+  </button>
+</footer>
+
+<style>
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    padding: 28px clamp(20px, 5vw, 56px) 40px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-3);
+    font-size: 13px;
+  }
+
+  .mark {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .dot {
+    color: var(--accent);
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .top:hover {
+    color: var(--accent);
+  }
+</style>

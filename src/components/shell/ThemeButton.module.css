@@ -1,0 +1,25 @@
+.button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  color: var(--ink-2);
+}
+
+.button:hover {
+  background: var(--hover);
+}
+
+.sun,
+.coffee,
+.moon {
+  grid-area: 1 / 1;
+  display: none;
+}
+
+:global(html:not([data-theme='sepia']):not([data-theme='dark'])) .sun,
+:global(html[data-theme='sepia']) .coffee,
+:global(html[data-theme='dark']) .moon {
+  display: block;
+}

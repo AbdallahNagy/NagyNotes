@@ -1,0 +1,84 @@
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px 6px 4px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.row:hover {
+  background: var(--hover);
+}
+
+.folder {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.active,
+.active:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.caret,
+.slot {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 16px;
+  color: var(--ink-3);
+}
+
+.caret {
+  position: relative;
+  z-index: 1;
+}
+
+.link {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Stretches the link over the whole row so the entire row is clickable. */
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.post {
+  font-weight: 400;
+}
+
+.mark {
+  color: var(--accent);
+}
+
+.count {
+  color: var(--ink-3);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.row:has(.link:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}

@@ -87,3 +87,13 @@ ol {
     scroll-behavior: auto !important;
   }
 }
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  height: 100dvh;
+  overflow: hidden;
+}

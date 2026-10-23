@@ -1,0 +1,81 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Footer from '@/components/shell/Footer.astro';
+import Header from '@/components/shell/Header.astro';
+import Sidebar from '@/components/shell/Sidebar';
+import { getContent } from '@/lib/content/load';
+import { buildPostIndex, buildSidebarTree } from '@/lib/content/navigation';
+
+interface Props {
+  title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  /** Reserves room for the fixed mobile bottom bar rendered in the `bottom` slot. */
+  hasBottomBar?: boolean;
+}
+
+const { hasBottomBar = false, ...meta } = Astro.props;
+const { library } = await getContent();
+const tree = buildSidebarTree(library);
+const index = buildPostIndex(library);
+---
+
+<BaseLayout {...meta}>
+  <div class="app" data-bottom-bar={hasBottomBar || undefined}>
+    <Header />
+    <slot name="progress" />
+    <div class="body">
+      <Sidebar
+        client:load
+        transition:persist="sidebar"
+        tree={tree}
+        index={index}
+        initialPath={Astro.url.pathname}
+      />
+      <main id="main" class="main" tabindex="-1" data-drawer-inert>
+        <slot />
+        <Footer />
+      </main>
+      <slot name="bottom" />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+  }
+
+  .body {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .main {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    background: var(--bg);
+    color: var(--ink);
+    container: main / inline-size;
+  }
+
+  .main:focus {
+    outline: none;
+  }
+
+  @media (max-width: 759.98px) {
+    .app[data-bottom-bar] .main::after {
+      content: '';
+      display: block;
+      height: 60px;
+    }
+  }
+</style>
