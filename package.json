@@ -8,6 +8,7 @@
     "node": ">=22.23.4"
   },
   "scripts": {
+    "prepare": "astro sync",
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
