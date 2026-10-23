@@ -57,9 +57,9 @@ const step = (target: typeof prev) => (target ? { url: target.url, title: target
       <Comments client:idle slug={id} />
     </article>
     {toc.length > 0 && (
-      <aside class="toc-column" data-pagefind-ignore>
+      <div class="toc-column" data-pagefind-ignore>
         <Toc client:load headings={toc} readTime={post.readTime} />
-      </aside>
+      </div>
     )}
   </div>
   <MobileBottomBar
@@ -108,7 +108,6 @@ const step = (target: typeof prev) => (target ? { url: target.url, title: target
     color: var(--ink-3);
     font-family: var(--font-sans);
     font-size: 13.5px;
-    line-height: normal;
   }
 
   .spacer {

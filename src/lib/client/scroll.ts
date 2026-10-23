@@ -12,12 +12,12 @@ export function scrollMainTo(top: number): void {
 }
 
 /** Distance from the top of the scroll container's content to the element. */
-export function offsetInMain(element: HTMLElement, main: HTMLElement): number {
+function offsetInMain(element: HTMLElement, main: HTMLElement): number {
   return element.getBoundingClientRect().top - main.getBoundingClientRect().top + main.scrollTop;
 }
 
 /** Smooth-scrolls so the element sits `gap` px below the top of the container. */
-export function scrollMainToElement(element: HTMLElement, gap = 24): void {
+function scrollMainToElement(element: HTMLElement, gap = 24): void {
   const main = getMain();
   if (main) scrollMainTo(offsetInMain(element, main) - gap);
 }

@@ -7,7 +7,11 @@ export default function ProgressBar() {
   const progress = useStore($scrollProgress, { ssr: () => null });
   return (
     <div class={styles.track} aria-hidden="true">
-      <div class={styles.fill} style={{ width: `${(progress ?? 0) * 100}%` }} />
+      <div
+        class={styles.fill}
+        data-testid="reading-progress"
+        style={{ width: `${(progress ?? 0) * 100}%` }}
+      />
     </div>
   );
 }

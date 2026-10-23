@@ -33,8 +33,8 @@ const { shelves } = Astro.props;
             </li>
           ))}
         </ul>
-        <a class="open" href={folder.url} aria-label={`Open ${folder.name}`}>
-          Open folder
+        <a class="open" href={folder.url}>
+          Open folder <span class="visually-hidden">{folder.name}</span>
           <Icon name="arrow-right" />
         </a>
       </div>

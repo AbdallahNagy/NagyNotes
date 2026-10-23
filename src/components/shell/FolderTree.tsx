@@ -19,24 +19,13 @@ interface FolderTreeProps extends TreeState {
 
 const indent = (depth: number) => ({ paddingLeft: `${4 + depth * 16}px` });
 
-function PostMark({ bookmarked, read }: { bookmarked: boolean; read: boolean }) {
-  if (bookmarked) {
-    return (
-      <>
-        <Icon name="bookmark-simple-fill" size={13} class={styles.mark} />
-        <span class="visually-hidden">(bookmarked)</span>
-      </>
-    );
-  }
-  if (read) {
-    return (
-      <>
-        <Icon name="check" size={13} class={styles.mark} />
-        <span class="visually-hidden">(read)</span>
-      </>
-    );
-  }
-  return null;
+type PostStatus = 'bookmarked' | 'read';
+
+const STATUS_ICON = { bookmarked: 'bookmark-simple-fill', read: 'check' } as const;
+
+function postStatus(bookmarked: boolean, percent: number): PostStatus | null {
+  if (bookmarked) return 'bookmarked';
+  return percent >= READ_THRESHOLD ? 'read' : null;
 }
 
 export function FolderTree({ nodes, depth = 0, ...state }: FolderTreeProps) {
@@ -48,6 +37,7 @@ export function FolderTree({ nodes, depth = 0, ...state }: FolderTreeProps) {
         const active = node.url === currentPath;
 
         if (node.kind === 'post') {
+          const status = postStatus(bookmarks.has(node.id), progress[node.id] ?? 0);
           return (
             <li key={node.id}>
               <div class={cx(styles.row, active && styles.active)} style={indent(depth)}>
@@ -58,11 +48,9 @@ export function FolderTree({ nodes, depth = 0, ...state }: FolderTreeProps) {
                   aria-current={active ? 'page' : undefined}
                 >
                   {node.title}
+                  {status && <span class="visually-hidden"> ({status})</span>}
                 </a>
-                <PostMark
-                  bookmarked={bookmarks.has(node.id)}
-                  read={(progress[node.id] ?? 0) >= READ_THRESHOLD}
-                />
+                {status && <Icon name={STATUS_ICON[status]} size={13} class={styles.mark} />}
               </div>
             </li>
           );

@@ -80,7 +80,7 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
         id="sidebar"
         ref={drawerRef}
         class={styles.sidebar}
-        data-open={drawerActive || undefined}
+        data-open={drawerActive ? '' : undefined}
       >
         <div class={styles.full}>
           <div class={styles.top}>
@@ -147,7 +147,7 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
       <div
         role="presentation"
         class={styles.scrim}
-        data-open={drawerActive || undefined}
+        data-open={drawerActive ? '' : undefined}
         onClick={() => $drawerOpen.set(false)}
       />
     </>

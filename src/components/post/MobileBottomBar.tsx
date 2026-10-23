@@ -57,7 +57,7 @@ export default function MobileBottomBar({ prev, next, headings, readTime }: Mobi
 
   return (
     <>
-      <div class={styles.bar} data-drawer-inert>
+      <nav class={styles.bar} aria-label="Post navigation" data-drawer-inert>
         <StepLink target={prev} direction="prev" />
         {headings.length > 0 ? (
           <button
@@ -74,7 +74,7 @@ export default function MobileBottomBar({ prev, next, headings, readTime }: Mobi
           <span class={styles.contents}>{minutesLeft(readTime, progress ?? 0)} min left</span>
         )}
         <StepLink target={next} direction="next" />
-      </div>
+      </nav>
       {sheetOpen && (
         <>
           <div role="presentation" class={styles.scrim} onClick={closeSheet} />

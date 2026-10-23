@@ -8,7 +8,7 @@ import type {
   SidebarNode,
 } from './types';
 
-export const HOME_CRUMB: Crumb = { label: 'Home', url: '/' };
+const HOME_CRUMB: Crumb = { label: 'Home', url: '/' };
 
 export function getPost(library: Library, id: string): PostNode {
   const post = library.posts.get(id);
@@ -47,7 +47,7 @@ export function folderBreadcrumbs(library: Library, folderId: string): Crumb[] {
   return [HOME_CRUMB, ...folderChain(library, folderId).slice(0, -1).map(toCrumb)];
 }
 
-export function siblingPosts(library: Library, postId: string): PostNode[] {
+function siblingPosts(library: Library, postId: string): PostNode[] {
   const post = getPost(library, postId);
   const ids =
     post.folderId === null ? library.rootPostIds : getFolder(library, post.folderId).postIds;
@@ -77,7 +77,7 @@ function descendantFolderCount(library: Library, folderId: string): number {
   return folder.folderIds.reduce((total, id) => total + 1 + descendantFolderCount(library, id), 0);
 }
 
-export function newestFirst(posts: readonly PostNode[]): PostNode[] {
+function newestFirst(posts: readonly PostNode[]): PostNode[] {
   return [...posts].sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 

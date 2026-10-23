@@ -14,12 +14,12 @@ function compareOrder(a: number | undefined, b: number | undefined): number {
   return left < right ? -1 : 1;
 }
 
-export function compareFolders(a: FolderNode, b: FolderNode): number {
+function compareFolders(a: FolderNode, b: FolderNode): number {
   return compareOrder(a.order, b.order) || a.name.localeCompare(b.name);
 }
 
 /** Reading order: `order`, then oldest first, then title. */
-export function comparePosts(a: PostNode, b: PostNode): number {
+function comparePosts(a: PostNode, b: PostNode): number {
   return (
     compareOrder(a.order, b.order) ||
     a.date.getTime() - b.date.getTime() ||
