@@ -4,6 +4,8 @@ import '@/styles/prose.css';
 import AppLayout from '@/layouts/AppLayout.astro';
 import Breadcrumb from '@/components/post/Breadcrumb.astro';
 import BookmarkButton from '@/components/post/BookmarkButton';
+import CommentCount from '@/components/post/CommentCount';
+import Comments from '@/components/post/Comments';
 import MobileBottomBar from '@/components/post/MobileBottomBar';
 import PrevNext from '@/components/post/PrevNext.astro';
 import Toc from '@/components/post/Toc';
@@ -44,6 +46,7 @@ const step = (target: typeof prev) => (target ? { url: target.url, title: target
       <div class="meta" data-pagefind-ignore>
         <span>{post.readTime} min read</span>
         <time datetime={post.date.toISOString()}>{formatDate(post.date)}</time>
+        <CommentCount client:idle />
         <span class="spacer"></span>
         <BookmarkButton client:load postId={id} />
       </div>
@@ -51,6 +54,7 @@ const step = (target: typeof prev) => (target ? { url: target.url, title: target
         <Content />
       </div>
       <PrevNext prev={prev} next={next} folderName={folderName} />
+      <Comments client:idle slug={id} />
     </article>
     {toc.length > 0 && (
       <aside class="toc-column" data-pagefind-ignore>

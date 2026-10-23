@@ -54,6 +54,19 @@ function collectFolderIds(
   return ids;
 }
 
+/** Post ids double as comment keys, which the database restricts to this alphabet. */
+const VALID_ID = /^[a-z0-9/_-]+$/;
+
+function assertValidIds(posts: readonly PostInput[]): void {
+  const invalid = posts.find((post) => !VALID_ID.test(post.id));
+  if (invalid) {
+    throw new Error(
+      `Invalid post path "${invalid.id}": use only lowercase letters, digits, "-", "_" and "/" ` +
+        'in post file and folder names.',
+    );
+  }
+}
+
 function assertNoCollisions(posts: readonly PostInput[], folderIds: ReadonlySet<string>): void {
   for (const post of posts) {
     if (folderIds.has(post.id)) {
@@ -75,6 +88,7 @@ export function buildLibrary(
   { includeDrafts }: BuildOptions,
 ): Library {
   const visiblePosts = includeDrafts ? postInputs : postInputs.filter((post) => !post.draft);
+  assertValidIds(visiblePosts);
   const folderIds = collectFolderIds(visiblePosts, folderInputs);
   assertNoCollisions(visiblePosts, folderIds);
 

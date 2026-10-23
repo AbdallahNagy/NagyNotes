@@ -100,6 +100,11 @@ describe('buildLibrary', () => {
     expect(build([post('a/long', { body })]).posts.get('a/long')?.readTime).toBe(3);
   });
 
+  it('rejects post paths the comments table cannot key on', () => {
+    expect(() => build([post('apis/My Post')])).toThrow(/Invalid post path "apis\/My Post"/);
+    expect(() => build([post('apis/v1.2')])).toThrow(/Invalid post path/);
+  });
+
   it('throws a clear error when a post collides with a folder name', () => {
     expect(() => build([post('apis/auth'), post('apis/auth/basic')])).toThrow(
       /post "apis\/auth" has the same path as a folder/,

@@ -15,6 +15,7 @@
   --hover: #ece8df;
   --shadow: rgba(60, 45, 20, 0.14);
   --scrim: rgba(30, 25, 15, 0.28);
+  --danger: #a33b2f;
 }
 
 [data-theme='sepia'] {
@@ -31,6 +32,7 @@
   --hover: #e7dbc1;
   --shadow: rgba(70, 45, 15, 0.16);
   --scrim: rgba(40, 25, 10, 0.3);
+  --danger: #9b3a22;
 }
 
 [data-theme='dark'] {
@@ -47,6 +49,7 @@
   --hover: #2a2b32;
   --shadow: rgba(0, 0, 0, 0.45);
   --scrim: rgba(0, 0, 0, 0.5);
+  --danger: #f0a8a0;
 }
 
 :root {
