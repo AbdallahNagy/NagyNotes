@@ -5,10 +5,7 @@ test.describe('library', () => {
     await page.goto(POST_PATH);
     const bookmark = page.getByRole('button', { name: 'Bookmark', exact: true });
     await bookmark.click();
-    await expect(page.getByRole('button', { name: 'Bookmarked' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    await expect(page.getByRole('button', { name: 'Bookmarked' })).toBeVisible();
 
     await page.getByRole('link', { name: 'Nagy Notes.' }).click();
     await expect(page).toHaveURL('/');
@@ -30,10 +27,7 @@ test.describe('library', () => {
     await page.goto(POST_PATH);
     await page.getByRole('button', { name: 'Bookmark', exact: true }).click();
     await page.getByRole('button', { name: 'Bookmarked' }).click();
-    await expect(page.getByRole('button', { name: 'Bookmark', exact: true })).toHaveAttribute(
-      'aria-pressed',
-      'false',
-    );
+    await expect(page.getByRole('button', { name: 'Bookmark', exact: true })).toBeVisible();
   });
 
   test('opening a post expands its folders and highlights the row', async ({ page, isMobile }) => {

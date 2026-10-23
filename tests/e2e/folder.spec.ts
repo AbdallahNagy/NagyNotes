@@ -41,10 +41,9 @@ test.describe('folder page', () => {
     await page.goto('/apis/authentication/oauth-2-0');
     const toggle = page.getByRole('button', { name: 'Bookmark: What OAuth solves' });
 
+    await expect(toggle).toHaveAttribute('aria-pressed', 'false');
     await toggle.click();
-    await expect(
-      page.getByRole('button', { name: 'Remove bookmark: What OAuth solves' }),
-    ).toHaveAttribute('aria-pressed', 'true');
+    await expect(toggle).toHaveAttribute('aria-pressed', 'true');
   });
 
   test('shows read progress for posts the reader has scrolled', async ({ page }) => {

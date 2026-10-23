@@ -72,7 +72,7 @@ export default function FolderPostList({ posts, folderDepth, ownPosts }: FolderP
               <IconButton
                 icon={bookmarked ? 'bookmark-simple-fill' : 'bookmark-simple'}
                 iconSize={17}
-                label={`${bookmarked ? 'Remove bookmark' : 'Bookmark'}: ${post.title}`}
+                label={`Bookmark: ${post.title}`}
                 aria-pressed={bookmarked}
                 class={styles.bookmark}
                 onClick={() => toggleBookmark(post.id)}

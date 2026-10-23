@@ -12,7 +12,6 @@ export default function BookmarkButton({ postId }: { postId: string }) {
     <button
       type="button"
       class={cx(styles.button, bookmarked && styles.on)}
-      aria-pressed={bookmarked}
       onClick={() => toggleBookmark(postId)}
     >
       <Icon name={bookmarked ? 'bookmark-simple-fill' : 'bookmark-simple'} size={15} />

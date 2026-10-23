@@ -100,7 +100,7 @@ shows "Comments aren't available yet." and everything else works.
 1. Create a project at [supabase.com](https://supabase.com).
 2. Run `supabase/migrations/0001_comments.sql` (SQL editor, or `supabase db push`). It creates the
    `comments` table with row level security, column-level grants and a trigger that allows at most
-   three comments per client IP in ten minutes (only a SHA-256 of the IP is stored, and it is never
+   three comments per client IP in ten minutes (best effort, see the migration; only a SHA-256 of the IP is stored, and it is never
    readable through the public API).
 3. Copy the project URL and the `anon` key into `.env` as `PUBLIC_SUPABASE_URL` and
    `PUBLIC_SUPABASE_ANON_KEY`, and set the same variables in your hosting provider's build settings.

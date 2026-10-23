@@ -38,8 +38,10 @@ revoke all on public.comments from anon, authenticated;
 grant select (id, post_slug, author_name, body, created_at) on public.comments to anon, authenticated;
 grant insert (post_slug, author_name, body) on public.comments to anon, authenticated;
 
--- Rate limit: at most 3 comments per client IP in any 10 minutes. The IP comes from the
--- x-forwarded-for header that Supabase's API gateway sets; only its hash is stored.
+-- Rate limit: at most 3 comments per client IP in any 10 minutes; only the IP's hash is stored.
+-- The IP comes from cf-connecting-ip, which Cloudflare (in front of Supabase's API) sets and
+-- clients cannot override. The first x-forwarded-for entry is only a fallback: a client can
+-- prepend its own value there, so treat the limit as best effort.
 create function public.comments_rate_limit()
   returns trigger
   language plpgsql
@@ -47,8 +49,11 @@ create function public.comments_rate_limit()
   set search_path = ''
 as $$
 declare
-  forwarded_for text := current_setting('request.headers', true)::json ->> 'x-forwarded-for';
-  client_ip text := trim(split_part(coalesce(forwarded_for, ''), ',', 1));
+  headers json := coalesce(nullif(current_setting('request.headers', true), ''), '{}')::json;
+  client_ip text := coalesce(
+    nullif(trim(headers ->> 'cf-connecting-ip'), ''),
+    trim(split_part(coalesce(headers ->> 'x-forwarded-for', ''), ',', 1))
+  );
   hashed text;
 begin
   if client_ip = '' then

@@ -112,9 +112,11 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
               <span class={styles.sectionLabelInline}>
                 {matches === null ? 'Folders' : 'Matches'}
               </span>
-              <button type="button" class={styles.collapseAll} onClick={collapseAllFolders}>
-                Collapse all
-              </button>
+              {matches === null && (
+                <button type="button" class={styles.collapseAll} onClick={collapseAllFolders}>
+                  Collapse all
+                </button>
+              )}
             </div>
             <nav aria-label={matches === null ? 'Folders' : 'Search results'}>
               {matches === null ? (
