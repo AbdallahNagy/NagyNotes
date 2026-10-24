@@ -1,7 +1,7 @@
 # Nagy Notes
 
 A personal technical blog by Abdallah Nagy: notes on Dynamics 365, the Power Platform, APIs and
-DevOps. Posts live in nested folders, are browsed with a collapsible folder tree, and are built
+DevOps. Posts live in nested folders, are browsed with a collapsible, resizable folder tree (or a flat newest-first list), and are built
 for comfortable reading: a calm palette, reader-controlled text settings and copyable code blocks.
 
 Built with [Astro](https://astro.build) 7 (static output), [Preact](https://preactjs.com) islands
