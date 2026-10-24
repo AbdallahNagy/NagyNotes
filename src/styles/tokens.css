@@ -16,6 +16,8 @@
   --shadow: rgba(60, 45, 20, 0.14);
   --scrim: rgba(30, 25, 15, 0.28);
   --danger: #a33b2f;
+  --scrollbar-thumb: color-mix(in srgb, var(--ink-3) 38%, transparent);
+  --scrollbar-track: transparent;
 }
 
 [data-theme='sepia'] {
@@ -33,6 +35,8 @@
   --shadow: rgba(70, 45, 15, 0.16);
   --scrim: rgba(40, 25, 10, 0.3);
   --danger: #9b3a22;
+  --scrollbar-thumb: color-mix(in srgb, var(--ink-3) 42%, transparent);
+  --scrollbar-track: transparent;
 }
 
 [data-theme='dark'] {
@@ -50,6 +54,8 @@
   --shadow: rgba(0, 0, 0, 0.45);
   --scrim: rgba(0, 0, 0, 0.5);
   --danger: #f0a8a0;
+  --scrollbar-thumb: color-mix(in srgb, var(--ink-3) 45%, transparent);
+  --scrollbar-track: transparent;
 }
 
 :root {
