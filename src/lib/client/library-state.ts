@@ -1,4 +1,5 @@
 import { persistentJsonAtom } from './persistent';
+import { clampSidebarWidth, SIDEBAR_WIDTH } from './sidebar-width';
 import { STORAGE_KEYS } from './storage-keys';
 
 export const MAX_RECENT = 3;
@@ -10,6 +11,8 @@ export interface SidebarState {
   expanded: string[];
   /** Desktop only: the sidebar is collapsed to its icon rail. */
   rail: boolean;
+  /** Desktop width in px; kept while the sidebar is collapsed to the rail. */
+  width: number;
 }
 
 const isStringArray = (value: unknown): value is string[] =>
@@ -28,10 +31,14 @@ function parseProgress(raw: unknown, fallback: Record<string, number>): Record<s
 
 function parseSidebar(raw: unknown, fallback: SidebarState): SidebarState {
   if (typeof raw !== 'object' || raw === null) return fallback;
-  const { expanded, rail } = raw as Record<string, unknown>;
+  const { expanded, rail, width } = raw as Record<string, unknown>;
   return {
     expanded: isStringArray(expanded) ? expanded : fallback.expanded,
     rail: typeof rail === 'boolean' ? rail : fallback.rail,
+    width:
+      typeof width === 'number' && Number.isFinite(width)
+        ? clampSidebarWidth(width)
+        : fallback.width,
   };
 }
 
@@ -54,7 +61,7 @@ export const $progress = persistentJsonAtom<Record<string, number>>(
 
 export const $sidebar = persistentJsonAtom<SidebarState>(
   STORAGE_KEYS.sidebar,
-  { expanded: [], rail: false },
+  { expanded: [], rail: false, width: SIDEBAR_WIDTH.default },
   parseSidebar,
 );
 
@@ -100,4 +107,8 @@ export function collapseAllFolders(): void {
 
 export function setSidebarRail(rail: boolean): void {
   $sidebar.set({ ...$sidebar.get(), rail });
+}
+
+export function setSidebarWidth(width: number): void {
+  $sidebar.set({ ...$sidebar.get(), width: clampSidebarWidth(width) });
 }

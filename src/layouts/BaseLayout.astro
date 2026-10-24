@@ -11,6 +11,7 @@ import '@/styles/base.css';
 import { SITE } from '@/config/site';
 import { STORAGE_KEYS } from '@/lib/client/storage-keys';
 import { PREF_OPTIONS, defaultPrefs } from '@/lib/client/prefs';
+import { SIDEBAR_WIDTH } from '@/lib/client/sidebar-width';
 import Loader from '@/components/shell/Loader.astro';
 
 interface Props {
@@ -29,6 +30,7 @@ const prefsScriptVars = {
   keys: STORAGE_KEYS,
   options: PREF_OPTIONS,
   defaults: defaultPrefs(false),
+  widthRange: { min: SIDEBAR_WIDTH.min, max: SIDEBAR_WIDTH.max },
 };
 ---
 
@@ -70,6 +72,10 @@ const prefsScriptVars = {
         }
         const sidebar = JSON.parse(localStorage.getItem(keys.sidebar) ?? 'null');
         if (sidebar && sidebar.rail === true) root.setAttribute('data-rail', '');
+        if (sidebar && Number.isFinite(sidebar.width)) {
+          const width = Math.min(widthRange.max, Math.max(widthRange.min, sidebar.width));
+          root.style.setProperty('--sidebar-width', width + 'px');
+        }
       } catch {}
       try {
         if (sessionStorage.getItem(keys.loaderSeen)) root.setAttribute('data-loaded', '');

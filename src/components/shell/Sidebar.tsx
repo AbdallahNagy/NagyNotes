@@ -12,6 +12,7 @@ import {
   setSidebarRail,
   toggleFolder,
 } from '@/lib/client/library-state';
+import { SIDEBAR_WIDTH } from '@/lib/client/sidebar-width';
 import { useMediaQuery } from '@/lib/client/use-media-query';
 import { useSearch } from '@/lib/client/use-search';
 import { $drawerOpen } from '@/lib/client/ui-state';
@@ -21,6 +22,7 @@ import { FolderTree } from './FolderTree';
 import { RecentList } from './RecentList';
 import { SearchResults } from './SearchResults';
 import { SidebarFilter } from './SidebarFilter';
+import { SidebarResizer } from './SidebarResizer';
 import { useDrawer } from './use-drawer';
 import styles from './Sidebar.module.css';
 
@@ -37,7 +39,11 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
   const filterRef = useRef<HTMLInputElement>(null);
   const matches = useSearch(query, index);
   const serverState = useMemo(
-    () => ({ expanded: foldersToReveal(tree, initialPath), rail: false }),
+    () => ({
+      expanded: foldersToReveal(tree, initialPath),
+      rail: false,
+      width: SIDEBAR_WIDTH.default,
+    }),
     [tree, initialPath],
   );
 
@@ -145,6 +151,7 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
             <Icon name="house" size={18} />
           </a>
         </div>
+        <SidebarResizer width={sidebar.width} />
       </aside>
       <div
         role="presentation"

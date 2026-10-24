@@ -92,7 +92,27 @@ describe('sidebar', () => {
     state.expandFolders(['a']);
     state.setSidebarRail(true);
     state.collapseAllFolders();
-    expect(state.$sidebar.get()).toEqual({ expanded: [], rail: true });
+    expect(state.$sidebar.get()).toEqual({ expanded: [], rail: true, width: 280 });
+  });
+});
+
+describe('sidebar width', () => {
+  it('stores a clamped width and keeps it across the rail', async () => {
+    const state = await loadState();
+    state.setSidebarWidth(350);
+    state.setSidebarRail(true);
+    expect(state.$sidebar.get().width).toBe(350);
+
+    state.setSidebarWidth(9999);
+    expect(state.$sidebar.get().width).toBe(480);
+  });
+
+  it('clamps stored widths and ignores invalid ones', async () => {
+    const tooNarrow = await loadState({ [STORAGE_KEYS.sidebar]: '{"width":100}' });
+    expect(tooNarrow.$sidebar.get().width).toBe(220);
+
+    const invalid = await loadState({ [STORAGE_KEYS.sidebar]: '{"width":"wide"}' });
+    expect(invalid.$sidebar.get().width).toBe(280);
   });
 });
 
@@ -107,7 +127,7 @@ describe('corrupt storage', () => {
     expect(state.$bookmarks.get()).toEqual([]);
     expect(state.$recent.get()).toEqual([]);
     expect(state.$progress.get()).toEqual({});
-    expect(state.$sidebar.get()).toEqual({ expanded: [], rail: false });
+    expect(state.$sidebar.get()).toEqual({ expanded: [], rail: false, width: 280 });
   });
 
   it('keeps working when localStorage throws', async () => {

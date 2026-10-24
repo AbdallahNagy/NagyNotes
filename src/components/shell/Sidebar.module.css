@@ -94,6 +94,7 @@
 
 @media (min-width: 760px) {
   .sidebar {
+    position: relative;
     flex: none;
     width: var(--sidebar-width);
     overflow: hidden;
@@ -102,6 +103,11 @@
 
   .closeDrawer {
     display: none;
+  }
+
+  :global(html[data-resizing]) .sidebar {
+    transition: none;
+    user-select: none;
   }
 
   :global(html[data-rail]) .sidebar {
