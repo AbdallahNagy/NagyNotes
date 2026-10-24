@@ -1,0 +1,28 @@
+---
+import { SITE } from '@/config/site';
+---
+
+<a href="/" class="logo">
+  {SITE.name}
+  <span class="dot">.</span>
+</a>
+
+<style>
+  .logo {
+    padding: 6px 8px;
+    border-radius: var(--radius-md);
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .logo:hover {
+    background: var(--hover);
+  }
+
+  .dot {
+    color: var(--accent);
+  }
+</style>

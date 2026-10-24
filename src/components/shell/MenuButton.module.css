@@ -1,0 +1,17 @@
+/* Before hydration both buttons may render; CSS decides which one shows on each layout. */
+@media (min-width: 760px) {
+  .menu {
+    display: none;
+  }
+
+  /* Only offered while the sidebar is hidden; the sidebar has its own hide button. */
+  :global(html:not([data-sidebar-hidden])) .show {
+    display: none;
+  }
+}
+
+@media (max-width: 759.98px) {
+  .show {
+    display: none;
+  }
+}

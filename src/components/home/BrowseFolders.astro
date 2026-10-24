@@ -1,0 +1,111 @@
+---
+import Icon from '@/components/ui/Icon.astro';
+import { formatCount } from '@/lib/format';
+import type { FolderCard } from '@/lib/content/types';
+
+interface Shelf {
+  folder: FolderCard;
+  newest: { id: string; url: string; title: string }[];
+}
+
+interface Props {
+  shelves: Shelf[];
+}
+
+const { shelves } = Astro.props;
+---
+
+<section>
+  <h2 class="label">Browse folders</h2>
+  <div class="grid">
+    {shelves.map(({ folder, newest }) => (
+      <div class="card">
+        <a class="head" href={folder.url}>
+          <span class="name">{folder.name}</span>
+          <span class="meta">
+            {formatCount(folder.postCount, 'post')} · {formatCount(folder.folderCount, 'folder')}
+          </span>
+        </a>
+        <ul class="posts">
+          {newest.map((post) => (
+            <li>
+              <a href={post.url}>{post.title}</a>
+            </li>
+          ))}
+        </ul>
+        <a class="open" href={folder.url}>
+          Open folder <span class="visually-hidden">{folder.name}</span>
+          <Icon name="arrow-right" />
+        </a>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .label {
+    margin: 56px 0 14px;
+    color: var(--ink-3);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .name {
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .head:hover .name {
+    color: var(--accent);
+  }
+
+  .meta {
+    color: var(--ink-3);
+    font-size: 13px;
+  }
+
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--ink-2);
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .posts a:hover {
+    color: var(--accent);
+  }
+
+  .open {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    color: var(--accent);
+    font-size: 13px;
+  }
+</style>

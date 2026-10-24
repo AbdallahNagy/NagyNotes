@@ -1,0 +1,79 @@
+---
+import AppLayout from '@/layouts/AppLayout.astro';
+import Breadcrumb from '@/components/post/Breadcrumb.astro';
+import FolderGrid from '@/components/folder/FolderGrid.astro';
+import FolderPostList from '@/components/folder/FolderPostList';
+import { getContent } from '@/lib/content/load';
+import {
+  childFolderCards,
+  descendantPosts,
+  folderBreadcrumbs,
+  folderChain,
+  getFolder,
+  getPost,
+  toIndexEntry,
+} from '@/lib/content/navigation';
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+const { library } = await getContent();
+const folder = getFolder(library, id);
+const subfolders = childFolderCards(library, id);
+const ownPosts = folder.postIds.length > 0;
+const posts = (
+  ownPosts ? folder.postIds.map((postId) => getPost(library, postId)) : descendantPosts(library, id)
+).map((post) => toIndexEntry(library, post));
+const folderDepth = folderChain(library, id).length;
+---
+
+<AppLayout title={folder.name} description={folder.description}>
+  <div class="folder">
+    <Breadcrumb crumbs={folderBreadcrumbs(library, id)} spacing={12} />
+    <h1>{folder.name}</h1>
+    {folder.description && <p class="description">{folder.description}</p>}
+    {subfolders.length > 0 && (
+      <section>
+        <h2 class="label">Folders</h2>
+        <FolderGrid folders={subfolders} />
+      </section>
+    )}
+    <FolderPostList client:load posts={posts} folderDepth={folderDepth} ownPosts={ownPosts} />
+  </div>
+</AppLayout>
+
+<style>
+  .folder {
+    box-sizing: content-box;
+    max-width: 780px;
+    margin-inline: auto;
+    padding: 56px clamp(20px, 5vw, 56px) 96px;
+  }
+
+  h1 {
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .description {
+    max-width: 60ch;
+    margin-top: 12px;
+    color: var(--ink-2);
+    font-size: 17px;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .label {
+    margin: 40px 0 12px;
+    color: var(--ink-3);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>

@@ -1,0 +1,186 @@
+// @vitest-environment happy-dom
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type * as LibraryState from '@/lib/client/library-state';
+import { STORAGE_KEYS } from '@/lib/client/storage-keys';
+import type { SidebarNode } from '@/lib/content/types';
+
+type State = typeof LibraryState;
+
+/** The stores read storage when their module loads, so each test gets a fresh module. */
+async function loadState(stored: Record<string, string> = {}): Promise<State> {
+  localStorage.clear();
+  for (const [key, value] of Object.entries(stored)) localStorage.setItem(key, value);
+  vi.resetModules();
+  return import('@/lib/client/library-state');
+}
+
+beforeEach(() => {
+  localStorage.clear();
+});
+
+describe('bookmarks', () => {
+  it('toggles a bookmark on and off, newest first', async () => {
+    const state = await loadState();
+    state.toggleBookmark('a');
+    state.toggleBookmark('b');
+    expect(state.$bookmarks.get()).toEqual(['b', 'a']);
+
+    state.toggleBookmark('b');
+    expect(state.$bookmarks.get()).toEqual(['a']);
+  });
+
+  it('persists to localStorage and restores on load', async () => {
+    const state = await loadState();
+    state.toggleBookmark('a');
+    expect(localStorage.getItem(STORAGE_KEYS.bookmarks)).toBe('["a"]');
+
+    const reloaded = await loadState({ [STORAGE_KEYS.bookmarks]: '["x","y"]' });
+    expect(reloaded.$bookmarks.get()).toEqual(['x', 'y']);
+  });
+});
+
+describe('recent', () => {
+  it('keeps posts unique, most recent first', async () => {
+    const state = await loadState();
+    state.pushRecent('a');
+    state.pushRecent('b');
+    state.pushRecent('a');
+    expect(state.$recent.get()).toEqual(['a', 'b']);
+  });
+
+  it('is capped at three', async () => {
+    const state = await loadState();
+    for (const id of ['a', 'b', 'c', 'd']) state.pushRecent(id);
+    expect(state.$recent.get()).toEqual(['d', 'c', 'b']);
+  });
+});
+
+describe('progress', () => {
+  it('keeps the maximum reached', async () => {
+    const state = await loadState();
+    state.recordProgress('a', 40);
+    state.recordProgress('a', 20);
+    expect(state.$progress.get()).toEqual({ a: 40 });
+
+    state.recordProgress('a', 72.4);
+    expect(state.$progress.get()).toEqual({ a: 72 });
+  });
+
+  it('clamps to 0-100 and ignores zero', async () => {
+    const state = await loadState();
+    state.recordProgress('a', 140);
+    state.recordProgress('b', 0);
+    state.recordProgress('c', -5);
+    expect(state.$progress.get()).toEqual({ a: 100 });
+  });
+});
+
+describe('sidebar', () => {
+  it('toggles and adds folders without duplicating', async () => {
+    const state = await loadState();
+    state.expandFolders(['a', 'a/b']);
+    state.expandFolders(['a/b', 'c']);
+    expect(state.$sidebar.get().expanded).toEqual(['a', 'a/b', 'c']);
+
+    state.toggleFolder('a/b');
+    expect(state.$sidebar.get().expanded).toEqual(['a', 'c']);
+    state.toggleFolder('a/b');
+    expect(state.$sidebar.get().expanded).toEqual(['a', 'c', 'a/b']);
+  });
+
+  it('collapses everything and remembers a hidden sidebar', async () => {
+    const state = await loadState();
+    state.expandFolders(['a']);
+    state.setSidebarHidden(true);
+    state.collapseAllFolders();
+    expect(state.$sidebar.get()).toEqual({
+      expanded: [],
+      hidden: true,
+      width: 280,
+      view: 'tree',
+    });
+  });
+});
+
+describe('sidebar view and levels', () => {
+  const folder = (id: string, children: SidebarNode[] = []): SidebarNode => ({
+    kind: 'folder',
+    id,
+    url: `/${id}`,
+    name: id,
+    count: 0,
+    children,
+  });
+  const tree = [folder('a', [folder('a/x')]), folder('b')];
+
+  it('expands one level at a time and stops when everything is open', async () => {
+    const state = await loadState();
+    state.expandNextLevel(tree);
+    expect(state.$sidebar.get().expanded).toEqual(['a', 'b']);
+    state.expandNextLevel(tree);
+    expect(state.$sidebar.get().expanded).toEqual(['a', 'b', 'a/x']);
+    state.expandNextLevel(tree);
+    expect(state.$sidebar.get().expanded).toEqual(['a', 'b', 'a/x']);
+  });
+
+  it('remembers the view and ignores unknown stored values', async () => {
+    const state = await loadState();
+    state.setSidebarView('flat');
+    expect(state.$sidebar.get().view).toBe('flat');
+
+    const stored = await loadState({ [STORAGE_KEYS.sidebar]: '{"view":"grid"}' });
+    expect(stored.$sidebar.get().view).toBe('tree');
+    const flat = await loadState({ [STORAGE_KEYS.sidebar]: '{"view":"flat"}' });
+    expect(flat.$sidebar.get().view).toBe('flat');
+  });
+});
+
+describe('sidebar width', () => {
+  it('stores a clamped width and keeps it while hidden', async () => {
+    const state = await loadState();
+    state.setSidebarWidth(350);
+    state.setSidebarHidden(true);
+    expect(state.$sidebar.get().width).toBe(350);
+
+    state.setSidebarWidth(9999);
+    expect(state.$sidebar.get().width).toBe(480);
+  });
+
+  it('clamps stored widths and ignores invalid ones', async () => {
+    const tooNarrow = await loadState({ [STORAGE_KEYS.sidebar]: '{"width":100}' });
+    expect(tooNarrow.$sidebar.get().width).toBe(220);
+
+    const invalid = await loadState({ [STORAGE_KEYS.sidebar]: '{"width":"wide"}' });
+    expect(invalid.$sidebar.get().width).toBe(280);
+  });
+});
+
+describe('corrupt storage', () => {
+  it('falls back to defaults for invalid JSON or shapes', async () => {
+    const state = await loadState({
+      [STORAGE_KEYS.bookmarks]: '{not json',
+      [STORAGE_KEYS.recent]: '[1,2]',
+      [STORAGE_KEYS.progress]: '"text"',
+      [STORAGE_KEYS.sidebar]: '{"expanded":"x","hidden":"yes"}',
+    });
+    expect(state.$bookmarks.get()).toEqual([]);
+    expect(state.$recent.get()).toEqual([]);
+    expect(state.$progress.get()).toEqual({});
+    expect(state.$sidebar.get()).toEqual({
+      expanded: [],
+      hidden: false,
+      width: 280,
+      view: 'tree',
+    });
+  });
+
+  it('keeps working when localStorage throws', async () => {
+    const state = await loadState();
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('quota');
+    });
+    state.toggleBookmark('a');
+    expect(state.$bookmarks.get()).toEqual(['a']);
+    vi.restoreAllMocks();
+  });
+});

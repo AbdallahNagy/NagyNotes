@@ -1,0 +1,228 @@
+/* Reading preferences, set as data attributes on <html> by the prefs script. */
+:root {
+  --measure: 66ch;
+  --size-base: 18px;
+  --mobile-trim: 0px;
+  --article-font: var(--font-serif);
+  --article-leading: 1.72;
+  --article-gutter: 96px;
+}
+
+[data-measure='narrow'] {
+  --measure: 58ch;
+}
+
+[data-measure='wide'] {
+  --measure: 76ch;
+}
+
+[data-size='s'] {
+  --size-base: 16.5px;
+}
+
+[data-size='l'] {
+  --size-base: 20px;
+}
+
+[data-font='sans'] {
+  --article-font: var(--font-sans);
+  --article-leading: 1.68;
+}
+
+@media (max-width: 759.98px) {
+  :root {
+    --mobile-trim: 1px;
+    --article-gutter: 40px;
+  }
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose p {
+  margin: 0 0 1.15em;
+  text-wrap: pretty;
+}
+
+.prose h2 {
+  margin: 1.9em 0 0.55em;
+  color: var(--ink);
+  font-size: 1.32em;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  scroll-margin-top: 24px;
+}
+
+.prose h3 {
+  margin: 1.6em 0 0.5em;
+  color: var(--ink);
+  font-size: 1.1em;
+  font-weight: 500;
+  line-height: 1.35;
+  scroll-margin-top: 24px;
+}
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.prose ul,
+.prose ol {
+  margin: 0 0 1.15em;
+  padding-left: 1.4em;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li {
+  margin: 0.35em 0;
+  padding-left: 0.2em;
+}
+
+.prose li::marker {
+  color: var(--ink-3);
+}
+
+.prose blockquote {
+  margin: 1.3em 0;
+  padding-left: 1em;
+  border-left: 3px solid var(--line);
+  color: var(--ink-2);
+}
+
+.prose hr {
+  margin: 2em 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose :not(pre) > code {
+  padding: 0.12em 0.35em;
+  background: var(--code);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+}
+
+.prose table {
+  display: block;
+  max-width: 100%;
+  margin: 1.3em 0 1.6em;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 0.82em;
+  line-height: 1.5;
+}
+
+.prose th,
+.prose td {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  background: var(--code);
+  font-weight: 500;
+}
+
+/* Code blocks: <figure class="code-block"> built by lib/markdown/code-block.ts */
+.code-block {
+  margin: 1.3em 0 1.6em;
+  overflow: hidden;
+  background: var(--code);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.code-block__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 6px 0 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-3);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+.code-block__lang {
+  letter-spacing: 0.04em;
+}
+
+.code-copy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-2);
+  font-size: 12px;
+}
+
+.code-copy:hover {
+  background: var(--hover);
+}
+
+.code-copy svg:last-of-type,
+.code-copy[data-copied] svg:first-of-type {
+  display: none;
+}
+
+.code-copy[data-copied] svg:last-of-type {
+  display: block;
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 14px 16px 16px;
+  overflow-x: auto;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.65;
+  tab-size: 4;
+}
+
+.code-block pre code {
+  font-family: inherit;
+}
+
+/* Shiki emits one colour variable per theme; pick the one for the active reading theme. */
+.code-block pre span {
+  color: var(--shiki-light);
+}
+
+[data-theme='sepia'] .code-block pre span {
+  color: var(--shiki-sepia);
+}
+
+[data-theme='dark'] .code-block pre span {
+  color: var(--shiki-dark);
+}

@@ -1,0 +1,73 @@
+.composer {
+  position: relative;
+  margin-top: 24px;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.name,
+.body {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--ink);
+}
+
+.name {
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.body {
+  resize: vertical;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.composer:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.error {
+  padding-left: 6px;
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.submit {
+  flex: none;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  color: var(--accent);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.submit:disabled {
+  opacity: 0.45;
+}

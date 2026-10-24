@@ -1,0 +1,38 @@
+.handle {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 2;
+  display: none;
+  width: 8px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.handle::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 2px;
+  background: transparent;
+  transition: background-color 120ms ease;
+}
+
+.handle:hover::after,
+.handle:focus-visible::after,
+:global(html[data-resizing]) .handle::after {
+  background: var(--accent);
+}
+
+.handle:focus-visible {
+  outline: none;
+}
+
+@media (min-width: 760px) {
+  .handle {
+    display: block;
+  }
+
+  :global(html[data-sidebar-hidden]) .handle {
+    display: none;
+  }
+}

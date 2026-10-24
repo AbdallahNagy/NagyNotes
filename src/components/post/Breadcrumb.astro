@@ -1,0 +1,49 @@
+---
+import type { Crumb } from '@/lib/content/types';
+
+interface Props {
+  crumbs: Crumb[];
+  /** Space below the trail, in px. */
+  spacing?: number;
+}
+
+const { crumbs, spacing = 18 } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" style={`margin-bottom:${spacing}px`} data-pagefind-ignore>
+  <ol>
+    {crumbs.map((crumb) => (
+      <li>
+        <a href={crumb.url}>{crumb.label}</a>
+        <span class="sep" aria-hidden="true">
+          /
+        </span>
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 6px;
+    color: var(--ink-3);
+    font-family: var(--font-sans);
+    font-size: 13px;
+  }
+
+  li {
+    display: flex;
+    gap: 6px;
+  }
+
+  a:hover {
+    color: var(--accent);
+  }
+
+  .sep {
+    color: var(--line);
+  }
+</style>

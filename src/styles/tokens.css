@@ -1,0 +1,79 @@
+/* Design tokens: docs/design/README.md "Design tokens". Themes switch via [data-theme] on <html>. */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: #faf8f3;
+  --surface: #f4f1e9;
+  --ink: #2b2b2b;
+  --ink-2: #55524c;
+  --ink-3: #716e67;
+  --line: #e4dfd4;
+  --code: #f2efe7;
+  --accent: #3a5ba0;
+  --accent-soft: #e5ebf6;
+  --hover: #ece8df;
+  --shadow: rgba(60, 45, 20, 0.14);
+  --scrim: rgba(30, 25, 15, 0.28);
+  --danger: #a33b2f;
+  --scrollbar-thumb: color-mix(in srgb, var(--ink-3) 38%, transparent);
+  --scrollbar-track: transparent;
+}
+
+[data-theme='sepia'] {
+  color-scheme: light;
+  --bg: #f4ecd8;
+  --surface: #eee4cd;
+  --ink: #3b3026;
+  --ink-2: #5a4c3e;
+  --ink-3: #6e5f4b;
+  --line: #dccfb2;
+  --code: #ebe0c8;
+  --accent: #8a4b2a;
+  --accent-soft: #eadac3;
+  --hover: #e7dbc1;
+  --shadow: rgba(70, 45, 15, 0.16);
+  --scrim: rgba(40, 25, 10, 0.3);
+  --danger: #9b3a22;
+  --scrollbar-thumb: color-mix(in srgb, var(--ink-3) 42%, transparent);
+  --scrollbar-track: transparent;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #1e1f24;
+  --surface: #1a1b20;
+  --ink: #d6d6d6;
+  --ink-2: #b0b0b8;
+  --ink-3: #8e8e97;
+  --line: #32333a;
+  --code: #26272e;
+  --accent: #a9b4f5;
+  --accent-soft: #2c3150;
+  --hover: #2a2b32;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --scrim: rgba(0, 0, 0, 0.5);
+  --danger: #f0a8a0;
+  --scrollbar-thumb: color-mix(in srgb, var(--ink-3) 45%, transparent);
+  --scrollbar-track: transparent;
+}
+
+:root {
+  --font-serif: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, serif;
+  --font-sans: 'Inter Variable', Inter, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-sheet: 16px;
+
+  --header-height: 56px;
+  --sidebar-width: 280px;
+  --drawer-width: 300px;
+
+  --motion-sidebar: 200ms ease;
+  --motion-drawer: 220ms ease;
+  --motion-fade: 400ms ease;
+}

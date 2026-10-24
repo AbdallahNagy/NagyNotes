@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-7a9a7950-21d6-4276-a49f-1b9527b4dbe2/styles.css">
+<script src="_ds/nocturne-7a9a7950-21d6-4276-a49f-1b9527b4dbe2/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232B2B2B'/%3E%3Ctext x='15' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='18' font-weight='600' letter-spacing='-1' fill='%23FAF8F3'%3Enn%3C/text%3E%3Ccircle cx='26' cy='20.5' r='1.8' fill='%23A9B4F5'/%3E%3C/svg%3E">
+<style>
+body{margin:0;background:#E9E5DC;color:#2B2B2B;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+input,textarea{font:inherit;color:inherit}
+a{color:#3A5BA0}a:hover{color:#2F4A85}
+:focus-visible{outline:2px solid #3A5BA0;outline-offset:2px}
+::selection{background:rgba(58,91,160,.2)}
+@keyframes nnDot{0%,100%{opacity:1;transform:translateY(0)}50%{opacity:.25;transform:translateY(-6px)}}
+</style>
+</helmet>
+<div style="{{ themeVars }}">
+<div style="min-height:100vh;background:var(--page);display:flex;align-items:center;justify-content:center">
+<div ref="{{ rootRef }}" style="{{ frameStyle }}">
+
+<header style="height:56px;flex:none;display:flex;align-items:center;gap:6px;padding:0 12px 0 16px;border-bottom:1px solid var(--line);background:var(--bg);position:relative;z-index:10">
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ openDrawer }}" title="Folders" style="width:40px;height:40px;display:grid;place-items:center;border-radius:8px;font-size:20px" style-hover="background:var(--hover)"><i class="ph ph-list"></i></button>
+  </sc-if>
+  <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px" style-hover="background:var(--hover)">
+    <span style="font-family:'Source Serif 4',Georgia,serif;font-size:19px;font-weight:600;letter-spacing:-.01em;color:var(--ink)">Nagy Notes<span style="color:var(--accent)">.</span></span>
+  </button>
+  <div style="flex:1"></div>
+  <button onClick="{{ toggleSettings }}" title="Reading settings" style="height:40px;padding:0 12px;display:flex;align-items:center;gap:6px;border-radius:8px;font-size:14px;color:var(--ink-2)" style-hover="background:var(--hover)"><i class="ph ph-text-aa" style="font-size:19px"></i><span>{{ settingsLabel }}</span></button>
+  <button onClick="{{ cycleTheme }}" title="Switch theme" style="width:40px;height:40px;display:grid;place-items:center;border-radius:8px;font-size:19px;color:var(--ink-2)" style-hover="background:var(--hover)"><i class="{{ themeIcon }}"></i></button>
+</header>
+<div style="height:2px;flex:none;background:transparent;position:relative;z-index:9">
+  <div style="{{ progressStyle }}"></div>
+</div>
+
+<div style="flex:1;min-height:0;display:flex;position:relative;overflow:hidden">
+
+  <aside style="{{ sideStyle }}">
+    <sc-if value="{{ showFullSide }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:14px 12px 8px;display:flex;flex-direction:column;gap:10px;flex:none">
+        <div style="display:flex;align-items:center;padding:0 4px">
+          <span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Library</span>
+          <span style="flex:1"></span>
+          <button onClick="{{ collapseSide }}" title="{{ collapseTitle }}" style="width:32px;height:32px;display:grid;place-items:center;border-radius:6px;color:var(--ink-3);font-size:17px" style-hover="background:var(--hover);color:var(--ink)"><i class="{{ collapseIcon }}"></i></button>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink-3)">
+          <i class="ph ph-magnifying-glass" style="font-size:15px"></i>
+          <input ref="{{ searchRef }}" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Filter posts…" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:14px;color:var(--ink)">
+        </label>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:0 8px 24px">
+        <sc-if value="{{ showRecent }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:12px 8px 6px">Recent</div>
+          <sc-for list="{{ recentRows }}" as="r" hint-placeholder-count="2">
+            <button onClick="{{ r.onClick }}" style="width:100%;display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:14px;color:var(--ink-2)" style-hover="background:var(--hover)">
+              <i class="ph ph-clock-counter-clockwise" style="font-size:14px;color:var(--ink-3)"></i>
+              <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.title }}</span>
+            </button>
+          </sc-for>
+        </sc-if>
+        <div style="display:flex;align-items:center;padding:14px 8px 6px">
+          <span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">{{ treeLabel }}</span>
+          <span style="flex:1"></span>
+          <button onClick="{{ collapseAll }}" style="font-size:12px;color:var(--ink-3)" style-hover="color:var(--ink)">Collapse all</button>
+        </div>
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="12">
+          <div onClick="{{ r.onClick }}" style="{{ r.style }}" style-hover="background:var(--hover)">
+            <i class="{{ r.icon }}" onClick="{{ r.onToggle }}" style="font-size:12px;width:16px;flex:none;text-align:center;color:var(--ink-3)"></i>
+            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.label }}</span>
+            <i class="{{ r.mark }}" style="font-size:13px;color:var(--accent)"></i>
+            <span style="font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums">{{ r.count }}</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:8px;font-size:14px;color:var(--ink-3)">No posts match “{{ query }}”.</div>
+        </sc-if>
+      </div>
+    </sc-if>
+    <sc-if value="{{ rail }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:12px">
+        <button onClick="{{ expandSide }}" title="Show folders" style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px;font-size:18px;color:var(--ink-2)" style-hover="background:var(--hover)"><i class="ph ph-sidebar-simple"></i></button>
+        <button onClick="{{ railSearch }}" title="Filter posts" style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px;font-size:18px;color:var(--ink-2)" style-hover="background:var(--hover)"><i class="ph ph-magnifying-glass"></i></button>
+        <button onClick="{{ goHome }}" title="Home" style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px;font-size:18px;color:var(--ink-2)" style-hover="background:var(--hover)"><i class="ph ph-house"></i></button>
+      </div>
+    </sc-if>
+  </aside>
+
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDrawer }}" style="position:absolute;inset:0;background:var(--scrim);z-index:24"></div>
+  </sc-if>
+
+  <main ref="{{ scrollRef }}" onScroll="{{ onScroll }}" style="flex:1;min-width:0;overflow-y:auto;position:relative;background:var(--bg);color:var(--ink)">
+
+    <sc-if value="{{ isPost }}" hint-placeholder-val="{{ true }}">
+      <div style="{{ postGrid }}">
+        <article style="{{ articleStyle }}">
+          <nav style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;font-family:Inter,system-ui,sans-serif;font-size:13px;color:var(--ink-3);margin-bottom:18px">
+            <sc-for list="{{ crumbs }}" as="c" hint-placeholder-count="3">
+              <button onClick="{{ c.onClick }}" style="color:var(--ink-3)" style-hover="color:var(--accent)">{{ c.name }}</button>
+              <span style="color:var(--line)">/</span>
+            </sc-for>
+          </nav>
+          <h1 style="margin:0;font-size:2.05em;line-height:1.15;font-weight:500;letter-spacing:-.015em;color:var(--ink);text-wrap:balance">{{ post.title }}</h1>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:18px 0 36px;font-family:Inter,system-ui,sans-serif;font-size:13.5px;color:var(--ink-3)">
+            <span>{{ post.mins }} min read</span>
+            <span>{{ post.dateLabel }}</span>
+            <button onClick="{{ toComments }}" style="display:flex;align-items:center;gap:5px;color:var(--ink-3)" style-hover="color:var(--accent)"><i class="ph ph-chat-circle" style="font-size:15px"></i>{{ commentCount }}</button>
+            <span style="flex:1"></span>
+            <button onClick="{{ toggleBookmark }}" style="{{ bookmarkBtnStyle }}"><i class="{{ bookmarkIcon }}" style="font-size:15px"></i>{{ bookmarkLabel }}</button>
+          </div>
+
+          <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+            <sc-if value="{{ b.isP }}"><p style="margin:0 0 1.15em;text-wrap:pretty">{{ b.text }}</p></sc-if>
+            <sc-if value="{{ b.isNote }}"><p style="margin:0 0 1.15em;font-family:Inter,system-ui,sans-serif;font-size:14px;color:var(--ink-3)">{{ b.text }}</p></sc-if>
+            <sc-if value="{{ b.isH }}"><h2 data-h="{{ b.id }}" style="font-size:1.32em;line-height:1.3;font-weight:500;letter-spacing:-.01em;margin:1.9em 0 .55em;color:var(--ink);scroll-margin-top:24px">{{ b.text }}</h2></sc-if>
+            <sc-if value="{{ b.isCode }}">
+              <div style="margin:1.3em 0 1.6em;border:1px solid var(--line);border-radius:8px;background:var(--code);overflow:hidden">
+                <div style="display:flex;align-items:center;height:36px;padding:0 6px 0 14px;border-bottom:1px solid var(--line);font-family:Inter,system-ui,sans-serif;font-size:12px;color:var(--ink-3)">
+                  <span style="letter-spacing:.04em">{{ b.lang }}</span>
+                  <span style="flex:1"></span>
+                  <button onClick="{{ b.onCopy }}" style="height:28px;padding:0 10px;display:flex;align-items:center;gap:6px;border-radius:6px;color:var(--ink-2)" style-hover="background:var(--hover)"><i class="{{ b.copyIcon }}" style="font-size:14px"></i>{{ b.copyLabel }}</button>
+                </div>
+                <pre style="margin:0;padding:14px 16px 16px;overflow-x:auto;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13.5px;line-height:1.65;color:var(--ink);tab-size:4"><code>{{ b.code }}</code></pre>
+              </div>
+            </sc-if>
+          </sc-for>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:56px 0 0;font-family:Inter,system-ui,sans-serif">
+            <sc-if value="{{ prev }}">
+              <button onClick="{{ prev.onClick }}" style="padding:14px 16px;border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;gap:4px" style-hover="border-color:var(--accent)">
+                <span style="font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:6px"><i class="ph ph-arrow-left"></i>Previous in {{ folderName }}</span>
+                <span style="font-size:15px;font-weight:500;color:var(--ink)">{{ prev.title }}</span>
+              </button>
+            </sc-if>
+            <sc-if value="{{ next }}">
+              <button onClick="{{ next.onClick }}" style="padding:14px 16px;border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;gap:4px;align-items:flex-end;text-align:right;grid-column:-2" style-hover="border-color:var(--accent)">
+                <span style="font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:6px">Next in {{ folderName }}<i class="ph ph-arrow-right"></i></span>
+                <span style="font-size:15px;font-weight:500;color:var(--ink)">{{ next.title }}</span>
+              </button>
+            </sc-if>
+          </div>
+
+          <section data-comments="1" style="margin-top:64px;font-family:Inter,system-ui,sans-serif">
+            <h2 style="font-size:17px;font-weight:500;margin:0 0 20px;color:var(--ink)">Comments · {{ commentCount }}</h2>
+            <div style="display:flex;flex-direction:column;gap:22px">
+              <sc-for list="{{ comments }}" as="cm" hint-placeholder-count="2">
+                <div style="display:flex;gap:12px">
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--hover);display:grid;place-items:center;font-size:13px;font-weight:500;color:var(--ink-2)">{{ cm.initial }}</span>
+                  <div style="min-width:0">
+                    <div style="font-size:14px"><span style="font-weight:500;color:var(--ink)">{{ cm.name }}</span><span style="color:var(--ink-3)"> · {{ cm.date }}</span></div>
+                    <p style="margin:4px 0 0;font-size:15px;line-height:1.6;color:var(--ink-2);text-wrap:pretty">{{ cm.text }}</p>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:24px;border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden">
+              <textarea value="{{ draft }}" onChange="{{ onDraft }}" placeholder="Add a comment…" rows="3" style="display:block;width:100%;box-sizing:border-box;border:0;outline:0;resize:vertical;padding:12px 14px;background:transparent;font-size:15px;line-height:1.5;color:var(--ink)"></textarea>
+              <div style="display:flex;justify-content:flex-end;padding:8px;border-top:1px solid var(--line)">
+                <button onClick="{{ postComment }}" style="{{ postBtnStyle }}">Post comment</button>
+              </div>
+            </div>
+          </section>
+          <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><div style="height:72px"></div></sc-if>
+        </article>
+
+        <sc-if value="{{ showToc }}" hint-placeholder-val="{{ true }}">
+          <aside style="position:sticky;top:0;align-self:start;padding:64px 28px 0 0;font-family:Inter,system-ui,sans-serif">
+            <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px">On this page</div>
+            <div style="display:flex;flex-direction:column;border-left:1px solid var(--line)">
+              <sc-for list="{{ toc }}" as="t" hint-placeholder-count="4">
+                <button onClick="{{ t.onClick }}" style="{{ t.style }}" style-hover="color:var(--ink)">{{ t.text }}</button>
+              </sc-for>
+            </div>
+            <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--ink-3)">
+              <span>{{ minsLeft }}</span>
+              <button onClick="{{ toTop }}" style="display:flex;align-items:center;gap:6px;color:var(--ink-3)" style-hover="color:var(--accent)"><i class="ph ph-arrow-up"></i>Back to top</button>
+            </div>
+          </aside>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isFolder }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:780px;padding:56px clamp(20px,5vw,56px) 96px">
+        <nav style="display:flex;flex-wrap:wrap;gap:4px 6px;font-size:13px;color:var(--ink-3);margin-bottom:12px">
+          <sc-for list="{{ crumbs }}" as="c" hint-placeholder-count="1">
+            <button onClick="{{ c.onClick }}" style="color:var(--ink-3)" style-hover="color:var(--accent)">{{ c.name }}</button>
+            <span style="color:var(--line)">/</span>
+          </sc-for>
+        </nav>
+        <h1 style="margin:0;font-size:34px;line-height:1.15;font-weight:500;letter-spacing:-.02em">{{ folder.name }}</h1>
+        <p style="margin:12px 0 0;font-size:17px;line-height:1.6;color:var(--ink-2);max-width:60ch;text-wrap:pretty">{{ folder.desc }}</p>
+        <sc-if value="{{ hasSubs }}">
+          <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:40px 0 12px">Folders</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+            <sc-for list="{{ subs }}" as="s" hint-placeholder-count="2">
+              <button onClick="{{ s.onClick }}" style="padding:14px 16px;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;gap:12px" style-hover="border-color:var(--accent)">
+                <i class="ph ph-folder-simple" style="font-size:20px;color:var(--accent)"></i>
+                <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">{{ s.name }}</span><span style="font-size:13px;color:var(--ink-3)">{{ s.meta }}</span></span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="display:flex;align-items:center;gap:12px;margin:44px 0 8px">
+          <span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">{{ postsLabel }}</span>
+          <span style="flex:1"></span>
+          <div style="display:flex;border:1px solid var(--line);border-radius:8px;padding:2px">
+            <sc-for list="{{ sortOpts }}" as="o" hint-placeholder-count="2">
+              <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ folderPosts }}" as="p" hint-placeholder-count="3">
+            <div style="display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)">
+              <span style="font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums;padding-top:4px;width:20px">{{ p.num }}</span>
+              <button onClick="{{ p.onClick }}" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:18px;font-weight:500;line-height:1.3;color:var(--ink)" style-hover="color:var(--accent)">{{ p.title }}</span>
+                <span style="font-size:15px;line-height:1.55;color:var(--ink-2);text-wrap:pretty">{{ p.summary }}</span>
+                <span style="font-size:13px;color:var(--ink-3)">{{ p.meta }}</span>
+              </button>
+              <button onClick="{{ p.onBookmark }}" title="Bookmark" style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;font-size:17px;color:var(--ink-3)" style-hover="background:var(--hover)"><i class="{{ p.bmIcon }}"></i></button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:880px;padding:64px clamp(20px,5vw,56px) 96px">
+        <h1 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-size:40px;line-height:1.12;font-weight:500;letter-spacing:-.015em;max-width:18ch;text-wrap:balance">Notes on business apps and APIs</h1>
+        <p style="margin:16px 0 0;font-size:17px;line-height:1.6;color:var(--ink-2);max-width:56ch;text-wrap:pretty">By Abdallah Nagy. Practical write-ups from building on Dynamics 365, the Power Platform and REST APIs. Browse by folder on the left, or start with the latest below.</p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:40px">
+          <sc-if value="{{ cont }}">
+            <button onClick="{{ cont.onClick }}" style="padding:18px;border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;gap:8px;background:var(--bg)" style-hover="border-color:var(--accent)">
+              <span style="font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:6px"><i class="ph ph-book-open"></i>Continue reading</span>
+              <span style="font-size:17px;font-weight:500;line-height:1.3">{{ cont.title }}</span>
+              <span style="font-size:13px;color:var(--ink-3)">{{ cont.meta }}</span>
+              <span style="height:3px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:4px"><span style="{{ cont.barStyle }}"></span></span>
+            </button>
+          </sc-if>
+          <div style="padding:18px;border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:6px"><i class="ph ph-bookmark-simple"></i>Bookmarks · {{ bookmarkCount }}</span>
+            <sc-for list="{{ bookmarkRows }}" as="b" hint-placeholder-count="2">
+              <button onClick="{{ b.onClick }}" style="font-size:15px;line-height:1.35;color:var(--ink)" style-hover="color:var(--accent)">{{ b.title }}</button>
+            </sc-for>
+            <sc-if value="{{ noBookmarks }}"><span style="font-size:14px;color:var(--ink-3)">Bookmark a post to keep it here.</span></sc-if>
+          </div>
+        </div>
+
+        <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:56px 0 14px">Browse folders</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px">
+          <sc-for list="{{ shelves }}" as="sh" hint-placeholder-count="3">
+            <div style="padding:18px;border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;gap:12px">
+              <button onClick="{{ sh.onClick }}" style="display:flex;flex-direction:column;gap:2px">
+                <span style="font-size:17px;font-weight:500" style-hover="color:var(--accent)">{{ sh.name }}</span>
+                <span style="font-size:13px;color:var(--ink-3)">{{ sh.meta }}</span>
+              </button>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ sh.posts }}" as="sp" hint-placeholder-count="3">
+                  <button onClick="{{ sp.onClick }}" style="font-size:14px;line-height:1.4;color:var(--ink-2)" style-hover="color:var(--accent)">{{ sp.title }}</button>
+                </sc-for>
+              </div>
+              <button onClick="{{ sh.onClick }}" style="font-size:13px;color:var(--accent);display:flex;align-items:center;gap:6px;margin-top:auto">Open folder<i class="ph ph-arrow-right"></i></button>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:56px 0 4px">Latest</div>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ latest }}" as="l" hint-placeholder-count="5">
+            <button onClick="{{ l.onClick }}" style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;padding:16px 0;border-bottom:1px solid var(--line)">
+              <span style="flex:1 1 320px;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:17px;font-weight:500;line-height:1.3" style-hover="color:var(--accent)">{{ l.title }}</span>
+                <span style="font-size:13px;color:var(--ink-3)">{{ l.path }}</span>
+              </span>
+              <span style="font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums">{{ l.meta }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+    <footer style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:28px clamp(20px,5vw,56px) 40px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-3)">
+      <span style="font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:500;letter-spacing:-.04em;line-height:1;color:var(--ink)">nn<span style="color:var(--accent)">.</span></span>
+      <span>Written by Abdallah Nagy</span>
+      <span style="flex:1"></span>
+      <button onClick="{{ toTop }}" style="display:flex;align-items:center;gap:6px;color:var(--ink-3)" style-hover="color:var(--accent)"><i class="ph ph-arrow-up"></i>Back to top</button>
+    </footer>
+    <sc-if value="{{ mobileBar }}" hint-placeholder-val="{{ false }}"><div style="height:60px"></div></sc-if>
+  </main>
+  <sc-if value="{{ loaderOn }}" hint-placeholder-val="{{ true }}">
+    <div style="{{ loaderStyle }}">
+      <span style="font-family:'Source Serif 4',Georgia,serif;font-size:72px;font-weight:500;letter-spacing:-.04em;line-height:1;color:var(--ink);display:flex;align-items:baseline">nn{{ loaderDot }}</span>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ mobileBar }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:0;right:0;bottom:0;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;background:var(--bg);border-top:1px solid var(--line);z-index:15;font-size:14px">
+      <button onClick="{{ mPrev }}" style="{{ mPrevStyle }}"><i class="ph ph-arrow-left" style="font-size:18px"></i></button>
+      <button onClick="{{ openTocSheet }}" style="height:44px;padding:0 16px;display:flex;align-items:center;gap:8px;border-radius:8px;color:var(--ink-2)"><i class="ph ph-list-bullets" style="font-size:18px"></i>Contents · {{ minsLeft }}</button>
+      <button onClick="{{ mNext }}" style="{{ mNextStyle }}"><i class="ph ph-arrow-right" style="font-size:18px"></i></button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ tocSheet }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeTocSheet }}" style="position:absolute;inset:0;background:var(--scrim);z-index:26"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;z-index:27;background:var(--bg);border-radius:16px 16px 0 0;padding:12px 20px 28px;display:flex;flex-direction:column;gap:4px">
+      <div style="width:36px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 12px"></div>
+      <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px">On this page</div>
+      <sc-for list="{{ toc }}" as="t" hint-placeholder-count="4">
+        <button onClick="{{ t.onClick }}" style="{{ t.sheetStyle }}">{{ t.text }}</button>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ settingsOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;top:10px;right:12px;width:300px;max-width:calc(100% - 24px);box-sizing:border-box;z-index:30;background:var(--bg);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 32px var(--shadow);padding:16px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:center">
+        <span style="font-size:14px;font-weight:500;color:var(--ink)">Reading settings</span>
+        <span style="flex:1"></span>
+        <button onClick="{{ toggleSettings }}" title="Close" style="width:28px;height:28px;display:grid;place-items:center;border-radius:6px;color:var(--ink-3)" style-hover="background:var(--hover)"><i class="ph ph-x"></i></button>
+      </div>
+      <sc-for list="{{ settingGroups }}" as="g" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;color:var(--ink-3)">{{ g.label }}</span>
+          <div style="display:flex;border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px">
+            <sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="3">
+              <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+      <span style="font-size:12px;color:var(--ink-3)">Saved on this device.</span>
+    </div>
+  </sc-if>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;sepia&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'sepia'|'dark'&quot;},&quot;layout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;desktop&quot;,&quot;mobile&quot;],&quot;default&quot;:&quot;desktop&quot;,&quot;tsType&quot;:&quot;'desktop'|'mobile'&quot;},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;post&quot;,&quot;folder&quot;,&quot;home&quot;],&quot;default&quot;:&quot;post&quot;,&quot;tsType&quot;:&quot;'post'|'folder'|'home'&quot;},&quot;showLoader&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const FOLDERS = [
+  { id: 'apis', name: 'APIs', parent: null, desc: 'Designing, securing and consuming HTTP APIs.' },
+  { id: 'auth', name: 'Authentication', parent: 'apis', desc: 'How clients prove who they are, from API keys to OAuth 2.0.' },
+  { id: 'oauth', name: 'OAuth 2.0', parent: 'auth', desc: 'The OAuth flows worth knowing. Read them in order.' },
+  { id: 'rate', name: 'Rate limiting', parent: 'apis', desc: 'Staying inside quotas without dropping requests.' },
+  { id: 'bizapps', name: 'Business Applications', parent: null, desc: "Notes from building on Microsoft's business platforms." },
+  { id: 'dyn', name: 'Microsoft Dynamics', parent: 'bizapps', desc: 'Extending Dynamics 365 and Dataverse with code.' },
+  { id: 'plugins', name: 'Plugins', parent: 'dyn', desc: 'Server-side logic that runs inside the platform event pipeline.' },
+  { id: 'pp', name: 'Power Platform', parent: 'bizapps', desc: 'Power Automate and Power Apps from the developer side.' },
+  { id: 'devops', name: 'DevOps', parent: null, desc: 'Shipping solutions between environments.' },
+  { id: 'pipes', name: 'Pipelines', parent: 'devops', desc: 'Build and release pipelines for Dataverse solutions.' }
+];
+const POSTS = [
+  { id: 'oauth-intro', folder: 'oauth', order: 1, title: 'What OAuth solves', date: '2026-09-30', mins: 5, summary: 'Why passing passwords between services stopped being acceptable, and the vocabulary you need before reading about any specific flow.' },
+  { id: 'client-credentials', folder: 'oauth', order: 2, title: 'The client credentials flow, end to end', date: '2026-10-18', mins: 11, summary: 'Machine-to-machine authentication: registering the client, requesting and caching tokens, and the errors you hit first.' },
+  { id: 'pkce', folder: 'oauth', order: 3, title: 'Auth code + PKCE for single-page apps', date: '2026-10-06', mins: 9, summary: 'The flow to use when a person signs in from a browser or mobile app, and why PKCE replaced the implicit flow.' },
+  { id: 'api-keys', folder: 'auth', order: 1, title: 'API keys done right', date: '2026-09-22', mins: 5, summary: 'Where API keys are still the right choice, and how to issue, scope and rotate them.' },
+  { id: 'basic-bearer', folder: 'auth', order: 2, title: 'Basic vs bearer authentication', date: '2026-09-10', mins: 4, summary: 'Two Authorization header schemes that look similar and behave very differently.' },
+  { id: 'rate-limiting', folder: 'rate', order: 1, title: 'Rate limiting basics', date: '2026-10-03', mins: 7, summary: 'Fixed windows, sliding windows and token buckets, and how to read the headers an API sends back.' },
+  { id: 'retry', folder: 'rate', order: 2, title: 'Retry policies with backoff', date: '2026-10-09', mins: 6, summary: 'Retrying 429 and 503 responses without making an outage worse.' },
+  { id: 'plugins-basics', folder: 'plugins', order: 1, title: 'Plugins: the basics', date: '2026-09-02', mins: 6, summary: 'What a Dataverse plugin is, where it runs in the event pipeline, and the smallest one worth writing.' },
+  { id: 'pre-post', folder: 'plugins', order: 2, title: 'Pre-operation vs post-operation', date: '2026-09-15', mins: 7, summary: 'Choosing the pipeline stage, and the bugs that come from picking the wrong one.' },
+  { id: 'custom-steps', folder: 'dyn', order: 1, title: 'Writing custom workflow steps', date: '2026-10-12', mins: 8, summary: 'Building a custom workflow activity in C#, from input parameters to registration and debugging.' },
+  { id: 'web-resources', folder: 'dyn', order: 2, title: "Web resources that don't fight you", date: '2026-10-20', mins: 5, summary: 'Structuring JavaScript web resources so forms stay fast and upgrades stay painless.' },
+  { id: 'pa-apis', folder: 'pp', order: 1, title: 'Calling APIs from Power Automate', date: '2026-08-28', mins: 6, summary: 'The HTTP action, custom connectors, and when to use each.' },
+  { id: 'solution-pipelines', folder: 'pipes', order: 1, title: 'Deploying solutions with pipelines', date: '2026-08-14', mins: 9, summary: 'Moving Dataverse solutions from dev to production with Azure DevOps and the Power Platform Build Tools.' }
+];
+const P = t => ({ t: 'p', text: t }), H = (id, t) => ({ t: 'h', id, text: t }), C = (lang, code) => ({ t: 'code', lang, code });
+const BODIES = {
+  'client-credentials': [
+    P('Client credentials is the OAuth 2.0 flow for machine-to-machine calls. There is no user and no browser redirect: a service authenticates as itself and receives an access token it can send to an API. If you have a nightly sync job, a backend that calls Dataverse, or a webhook processor that talks to another service, this is the flow you want.'),
+    P('This post walks through the whole round trip: registering the client, requesting a token, using it, caching it, and the errors you will run into first.'),
+    H('overview', 'Overview'),
+    P('Two parties take part besides your code. The authorization server issues tokens, and the resource server (the API) accepts them. Your service holds a client ID and a secret or certificate, exchanges them for a token, and attaches that token to every API request until it expires.'),
+    P('Because nothing interactive happens, the token represents the application, not a person. Permissions are granted to the app registration ahead of time, usually by an administrator, and appear in the token as roles.'),
+    H('request', 'Requesting a token'),
+    P('The token request is a single form-encoded POST to the token endpoint. The scope parameter names the API you want to call; with Microsoft Entra ID it is the resource URL followed by /.default.'),
+    C('bash', 'curl -X POST https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token \\\n  -d grant_type=client_credentials \\\n  -d client_id=$CLIENT_ID \\\n  -d client_secret=$CLIENT_SECRET \\\n  -d scope=https://yourorg.crm.dynamics.com/.default'),
+    P('A successful response contains the token and its lifetime in seconds:'),
+    C('json', '{\n  "token_type": "Bearer",\n  "expires_in": 3599,\n  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOi..."\n}'),
+    H('call', 'Calling the API'),
+    P('Send the token in the Authorization header with the Bearer scheme. The API validates the signature, the audience and the expiry on every request, so a token issued for one API will be rejected by another.'),
+    C('c#', 'using var http = new HttpClient();\nhttp.DefaultRequestHeaders.Authorization =\n    new AuthenticationHeaderValue("Bearer", token);\n\nvar res = await http.GetAsync($"{baseUrl}/api/data/v9.2/accounts?$top=5");\nres.EnsureSuccessStatusCode();'),
+    H('cache', 'Caching tokens'),
+    P('Requesting a new token on every call is the most common mistake with this flow. It adds a network round trip to each request and can get your client throttled by the authorization server. Cache the token and refresh it shortly before it expires.'),
+    C('c#', 'var token = await cache.GetOrCreateAsync("api-token", async entry =>\n{\n    var result = await RequestTokenAsync();\n    entry.AbsoluteExpirationRelativeToNow =\n        TimeSpan.FromSeconds(result.ExpiresIn - 300);\n    return result.AccessToken;\n});'),
+    P('Refreshing five minutes early covers clock skew between your server and the authorization server. Client credentials does not issue refresh tokens, so refreshing simply means requesting a new token.'),
+    H('errors', 'Common errors'),
+    P('invalid_client means the client ID or secret is wrong, or the secret has expired. Secrets in Entra ID have an end date, so set a reminder or switch to a certificate.'),
+    P('A 401 from the API with a valid-looking token usually means the audience is wrong: the scope you requested points to a different resource than the one you are calling. Decode the token and check the aud claim.'),
+    P('A 403 means the token is fine but the app lacks permission. Check that the API permission has admin consent, and for Dataverse, that an application user exists with a security role.')
+  ],
+  'custom-steps': [
+    P('Custom workflow activities let you add your own step to the classic workflow designer in Dynamics 365. They are .NET classes that run inside the platform, take input parameters from the designer, and return output parameters the next step can use.'),
+    H('when', 'When to use one'),
+    P('Reach for a custom step when a workflow needs logic the designer cannot express, such as a calculation or a query over related records. For new automation, Power Automate or a plugin is often the better fit; custom steps make the most sense when you are extending existing classic workflows.'),
+    H('class', 'The activity class'),
+    C('c#', 'public class AddBusinessDays : CodeActivity\n{\n    [Input("Start date"), RequiredArgument]\n    public InArgument<DateTime> StartDate { get; set; }\n\n    [Input("Days")]\n    public InArgument<int> Days { get; set; }\n\n    [Output("Result")]\n    public OutArgument<DateTime> Result { get; set; }\n\n    protected override void Execute(CodeActivityContext context)\n    {\n        var date = StartDate.Get(context);\n        var days = Days.Get(context);\n        while (days > 0)\n        {\n            date = date.AddDays(1);\n            if (date.DayOfWeek is not (DayOfWeek.Saturday or DayOfWeek.Sunday)) days--;\n        }\n        Result.Set(context, date);\n    }\n}'),
+    P('The Input and Output attributes set the labels shown in the workflow designer. Keep them short; they appear in a narrow property panel.'),
+    H('register', 'Registering the assembly'),
+    P('Sign the assembly with a strong name key, then register it with the Plugin Registration Tool. The step appears in the designer under the group name you set during registration, so pick something your makers will recognise.'),
+    H('debug', 'Debugging'),
+    P("Workflows run asynchronously, so you can't step through them in the designer. Write to the tracing service and read the output on the System Job record, or use the Plugin Registration Tool's profiler to replay an execution locally."),
+    C('c#', 'var tracing = context.GetExtension<ITracingService>();\ntracing.Trace("Adding {0} business days to {1}", days, date);')
+  ]
+};
+const SEED = {
+  'client-credentials': [{ name: 'Priya S.', date: 'Oct 19', text: 'The /.default scope detail saved me an afternoon. Thanks.' }, { name: 'Tom W.', date: 'Oct 20', text: 'Worth adding that certificates avoid the secret expiry problem entirely.' }],
+  'custom-steps': [{ name: 'Lena M.', date: 'Oct 13', text: 'Is there a way to unit test these without registering them?' }]
+};
+const THEMES = {
+  light: { '--bg': '#FAF8F3', '--surface': '#F4F1E9', '--ink': '#2B2B2B', '--ink-2': '#55524C', '--ink-3': '#716E67', '--line': '#E4DFD4', '--code': '#F2EFE7', '--accent': '#3A5BA0', '--accent-soft': '#E5EBF6', '--hover': '#ECE8DF', '--page': '#E9E5DC', '--shadow': 'rgba(60,45,20,.14)', '--scrim': 'rgba(30,25,15,.28)' },
+  sepia: { '--bg': '#F4ECD8', '--surface': '#EEE4CD', '--ink': '#3B3026', '--ink-2': '#5A4C3E', '--ink-3': '#6E5F4B', '--line': '#DCCFB2', '--code': '#EBE0C8', '--accent': '#8A4B2A', '--accent-soft': '#EADAC3', '--hover': '#E7DBC1', '--page': '#E6DBC2', '--shadow': 'rgba(70,45,15,.16)', '--scrim': 'rgba(40,25,10,.3)' },
+  dark: { '--bg': '#1E1F24', '--surface': '#1A1B20', '--ink': '#D6D6D6', '--ink-2': '#B0B0B8', '--ink-3': '#8E8E97', '--line': '#32333A', '--code': '#26272E', '--accent': '#A9B4F5', '--accent-soft': '#2C3150', '--hover': '#2A2B32', '--page': '#141519', '--shadow': 'rgba(0,0,0,.45)', '--scrim': 'rgba(0,0,0,.5)' }
+};
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const fmt = d => { const [y, m, dd] = d.split('-').map(Number); return `${MON[m - 1]} ${dd}, ${y}`; };
+const KEY = 'margin-notes-proto-v1';
+const postById = id => POSTS.find(p => p.id === id);
+const folderById = id => FOLDERS.find(f => f.id === id);
+const chain = fid => { const out = []; let f = folderById(fid); while (f) { out.unshift(f); f = folderById(f.parent); } return out; };
+const descFolders = fid => { const out = [fid]; FOLDERS.filter(f => f.parent === fid).forEach(f => out.push(...descFolders(f.id))); return out; };
+const postsUnder = fid => { const ids = descFolders(fid); return POSTS.filter(p => ids.includes(p.folder)); };
+const byOrder = (a, b) => a.order - b.order;
+const byNewest = (a, b) => b.date.localeCompare(a.date);
+
+class Component extends DCLogic {
+  scrollRef = React.createRef();
+  rootRef = React.createRef();
+  searchRef = React.createRef();
+  state = this.initState();
+
+  initState() {
+    let s = {};
+    try { s = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+    const start = this.props.startScreen ?? 'post';
+    return {
+      screen: start, postId: 'client-credentials', folderId: start === 'folder' ? 'auth' : 'oauth',
+      expanded: { apis: true, auth: true, oauth: true }, focus: false, settings: false, drawer: false, tocSheet: false,
+      query: '', copied: null, active: 'overview', progress: 0, w: 1400, draft: '', sort: 'order',
+      prefs: { size: 'm', width: 'normal', font: 'serif', ...(s.prefs || {}), theme: s.prefs?.theme || this.props.theme || 'light' },
+      bookmarks: s.bookmarks || ['custom-steps'], recent: s.recent || ['custom-steps', 'rate-limiting'],
+      readPct: s.readPct || { 'custom-steps': 40 }, comments: s.comments || {}
+    };
+  }
+  measure = () => {
+    const el = this.rootRef.current;
+    const w = (el && el.offsetWidth) || window.innerWidth;
+    if (w && Math.abs(w - this.state.w) > 1) this.setState({ w });
+  };
+  componentDidMount() {
+    this.lt1 = setTimeout(() => this.setState({ loaderFade: true }), 1100);
+    this.lt2 = setTimeout(() => this.setState({ loaderGone: true }), 1500);
+    this.measure();
+    window.addEventListener('resize', this.measure);
+    this.mt = setInterval(this.measure, 500);
+    const el = this.rootRef.current;
+    if (el && el.nodeType === 1 && window.ResizeObserver) { this.ro = new ResizeObserver(this.measure); this.ro.observe(el); }
+  }
+  componentWillUnmount() { this.ro?.disconnect(); clearTimeout(this.ct); clearInterval(this.mt); clearTimeout(this.lt1); clearTimeout(this.lt2); window.removeEventListener('resize', this.measure); }
+  componentDidUpdate(prev) {
+    if (prev.theme !== this.props.theme && this.props.theme) this.setPref('theme', this.props.theme);
+    if (prev.startScreen !== this.props.startScreen && this.props.startScreen) this.go(this.props.startScreen, this.state.postId);
+    const { prefs, bookmarks, recent, readPct, comments } = this.state;
+    try { localStorage.setItem(KEY, JSON.stringify({ prefs, bookmarks, recent, readPct, comments })); } catch (e) {}
+  }
+  setPref(k, v) { this.setState(s => ({ prefs: { ...s.prefs, [k]: v } })); }
+  expandTo(fid, ex) { const e = { ...ex }; chain(fid).forEach(f => { e[f.id] = true; }); return e; }
+  toTop() { const el = this.scrollRef.current; if (el) el.scrollTop = 0; }
+  go(screen, id) {
+    if (screen === 'post') {
+      const p = postById(id);
+      this.setState(s => ({ screen, postId: id, folderId: p.folder, expanded: this.expandTo(p.folder, s.expanded), recent: [id, ...s.recent.filter(r => r !== id)].slice(0, 3), drawer: false, tocSheet: false, active: null, progress: 0 }), () => this.toTop());
+    } else if (screen === 'folder') {
+      this.setState(s => ({ screen, folderId: id || s.folderId, expanded: { ...this.expandTo(id || s.folderId, s.expanded) }, drawer: false, progress: 0 }), () => this.toTop());
+    } else this.setState({ screen: 'home', drawer: false, progress: 0 }, () => this.toTop());
+  }
+  onScroll = () => {
+    const el = this.scrollRef.current; if (!el || this.state.screen !== 'post') return;
+    const max = el.scrollHeight - el.clientHeight;
+    const pct = max > 0 ? Math.min(1, el.scrollTop / max) : 1;
+    let active = null;
+    el.querySelectorAll('[data-h]').forEach(h => { if (h.offsetTop - el.scrollTop <= 140) active = h.getAttribute('data-h'); });
+    const s = this.state, id = s.postId, pr = Math.round(pct * 100);
+    if (Math.abs(pr - Math.round(s.progress * 100)) >= 1 || active !== s.active) {
+      this.setState(st => ({ progress: pct, active, readPct: pr > (st.readPct[id] || 0) ? { ...st.readPct, [id]: pr } : st.readPct }));
+    }
+  };
+  scrollToH(id) {
+    const el = this.scrollRef.current; if (!el) return;
+    const h = el.querySelector(`[data-h="${id}"]`);
+    if (h) el.scrollTo({ top: h.offsetTop - 24, behavior: 'smooth' });
+    this.setState({ tocSheet: false });
+  }
+  toggleBm(id) { this.setState(s => ({ bookmarks: s.bookmarks.includes(id) ? s.bookmarks.filter(b => b !== id) : [id, ...s.bookmarks] })); }
+
+  renderVals() {
+    const s = this.state, pf = s.prefs;
+    const mobile = this.props.layout === 'mobile' || s.w < 760;
+    const rail = !mobile && s.focus;
+    const sideW = mobile ? 0 : rail ? 52 : 280;
+    const post = postById(s.postId), folder = folderById(s.folderId);
+    const isPost = s.screen === 'post', isFolder = s.screen === 'folder', isHome = s.screen === 'home';
+    const showToc = isPost && !mobile && s.w - sideW >= 1020;
+
+    const ex = s.expanded, q = s.query.trim().toLowerCase();
+    const rowStyle = (d, active, isF) => ({ display: 'flex', alignItems: 'center', gap: 6, padding: `6px 8px 6px ${4 + d * 16}px`, borderRadius: 6, cursor: 'pointer', fontSize: 14, lineHeight: 1.35, color: active ? 'var(--accent)' : isF ? 'var(--ink)' : 'var(--ink-2)', background: active ? 'var(--accent-soft)' : 'transparent', fontWeight: isF ? 500 : 400, userSelect: 'none' });
+    const postRow = (p, d, count) => ({ key: p.id, label: p.title, icon: '', mark: s.bookmarks.includes(p.id) ? 'ph-fill ph-bookmark-simple' : (s.readPct[p.id] >= 95 ? 'ph ph-check' : ''), count: count || '', style: rowStyle(d, isPost && s.postId === p.id, false), onClick: () => this.go('post', p.id), onToggle: null });
+    const rows = [];
+    if (q) {
+      POSTS.filter(p => (p.title + ' ' + p.summary).toLowerCase().includes(q)).forEach(p => rows.push(postRow(p, 0, chain(p.folder)[0].name)));
+    } else {
+      const walk = (pid, d) => {
+        FOLDERS.filter(f => f.parent === pid).forEach(f => {
+          const open = !!ex[f.id];
+          rows.push({ key: f.id, label: f.name, icon: open ? 'ph ph-caret-down' : 'ph ph-caret-right', mark: '', count: postsUnder(f.id).length, style: rowStyle(d, isFolder && s.folderId === f.id, true),
+            onClick: () => { if (isFolder && s.folderId === f.id) this.setState(st => ({ expanded: { ...st.expanded, [f.id]: !st.expanded[f.id] } })); else this.go('folder', f.id); },
+            onToggle: e => { e.stopPropagation(); this.setState(st => ({ expanded: { ...st.expanded, [f.id]: !st.expanded[f.id] } })); } });
+          if (open) walk(f.id, d + 1);
+        });
+        POSTS.filter(p => p.folder === pid).sort(byOrder).forEach(p => rows.push(postRow(p, d)));
+      };
+      walk(null, 0);
+    }
+
+    const sideStyle = mobile
+      ? { position: 'absolute', top: 0, left: 0, bottom: 0, width: 300, maxWidth: '85%', zIndex: 25, background: 'var(--surface)', borderRight: '1px solid var(--line)', display: 'flex', flexDirection: 'column', transform: s.drawer ? 'translateX(0)' : 'translateX(-102%)', transition: 'transform .22s ease', boxShadow: s.drawer ? '0 10px 40px var(--shadow)' : 'none' }
+      : { width: sideW, flex: 'none', background: 'var(--surface)', borderRight: '1px solid var(--line)', display: 'flex', flexDirection: 'column', overflow: 'hidden', transition: 'width .2s ease' };
+
+    const sizes = { s: 16.5, m: 18, l: 20 }, widths = { narrow: '58ch', normal: '66ch', wide: '76ch' };
+    const serif = pf.font === 'serif';
+    const articleStyle = { boxSizing: 'border-box', maxWidth: `calc(${widths[pf.width]} + ${mobile ? 40 : 96}px)`, margin: '0 auto', minWidth: 0, width: '100%', padding: mobile ? '32px 20px 48px' : '56px 48px 96px', fontFamily: serif ? "'Source Serif 4', Georgia, serif" : 'Inter, system-ui, sans-serif', fontSize: (mobile ? sizes[pf.size] - 1 : sizes[pf.size]), lineHeight: serif ? 1.72 : 1.68, color: 'var(--ink)' };
+    const postGrid = { display: 'grid', gridTemplateColumns: showToc ? 'minmax(0,1fr) 220px' : 'minmax(0,1fr)' };
+
+    const body = BODIES[post.id] || [P(post.summary), { t: 'note', text: 'Full text for this post is not written in the prototype. Open “The client credentials flow” or “Writing custom workflow steps” to see a complete article.' }];
+    const blocks = body.map((b, i) => {
+      const key = post.id + i, copied = s.copied === key;
+      return { isP: b.t === 'p', isH: b.t === 'h', isCode: b.t === 'code', isNote: b.t === 'note', id: b.id, text: b.text, lang: b.lang, code: b.code,
+        copyIcon: copied ? 'ph ph-check' : 'ph ph-copy', copyLabel: copied ? 'Copied' : 'Copy',
+        onCopy: () => { try { navigator.clipboard?.writeText(b.code).catch(() => {}); } catch (e) {} this.setState({ copied: key }); clearTimeout(this.ct); this.ct = setTimeout(() => this.setState({ copied: null }), 1600); } };
+    });
+    const heads = body.filter(b => b.t === 'h');
+    const activeH = s.active || heads[0]?.id;
+    const toc = heads.map(h => ({ text: h.text, onClick: () => this.scrollToH(h.id),
+      style: { textAlign: 'left', padding: '5px 0 5px 14px', marginLeft: -1, fontSize: 13.5, lineHeight: 1.4, borderLeft: `2px solid ${h.id === activeH ? 'var(--accent)' : 'transparent'}`, color: h.id === activeH ? 'var(--accent)' : 'var(--ink-3)' },
+      sheetStyle: { textAlign: 'left', padding: '12px 0', fontSize: 16, color: h.id === activeH ? 'var(--accent)' : 'var(--ink)', borderBottom: '1px solid var(--line)' } }));
+
+    const sibs = POSTS.filter(p => p.folder === post.folder).sort(byOrder);
+    const idx = sibs.findIndex(p => p.id === post.id);
+    const mk = p => p ? { title: p.title, onClick: () => this.go('post', p.id) } : null;
+    const prev = mk(sibs[idx - 1]), next = mk(sibs[idx + 1]);
+    const comments = [...(SEED[post.id] || []), ...(s.comments[post.id] || [])].map(c => ({ ...c, initial: c.name[0] }));
+    const bm = s.bookmarks.includes(post.id);
+    const minsLeft = `${Math.max(1, Math.ceil(post.mins * (1 - s.progress)))} min left`;
+
+    const crumbTarget = isPost ? chain(post.folder) : isFolder ? chain(folder.id).slice(0, -1) : [];
+    const crumbs = [{ name: 'Home', onClick: () => this.go('home') }, ...crumbTarget.map(f => ({ name: f.name, onClick: () => this.go('folder', f.id) }))];
+
+    const subs = FOLDERS.filter(f => f.parent === folder.id).map(f => { const n = postsUnder(f.id).length; return { name: f.name, meta: `${n} post${n === 1 ? '' : 's'}`, onClick: () => this.go('folder', f.id) }; });
+    let fps = POSTS.filter(p => p.folder === folder.id);
+    const direct = fps.length > 0;
+    if (!direct) fps = postsUnder(folder.id);
+    fps = [...fps].sort(s.sort === 'newest' ? byNewest : (a, b) => (a.folder === b.folder ? a.order - b.order : a.folder.localeCompare(b.folder)));
+    const folderPosts = fps.map((p, i) => {
+      const r = s.readPct[p.id] || 0;
+      const bits = [`${p.mins} min`, fmt(p.date)];
+      if (!direct) bits.push(chain(p.folder).slice(chain(folder.id).length).map(f => f.name).join(' / '));
+      if (r >= 95) bits.push('Read'); else if (r > 0) bits.push(`${r}% read`);
+      return { num: String(i + 1).padStart(2, '0'), title: p.title, summary: p.summary, meta: bits.join(' · '), onClick: () => this.go('post', p.id), onBookmark: () => this.toggleBm(p.id), bmIcon: s.bookmarks.includes(p.id) ? 'ph-fill ph-bookmark-simple' : 'ph ph-bookmark-simple' };
+    });
+    const segStyle = on => ({ flex: 1, height: 30, padding: '0 10px', borderRadius: 6, fontSize: 13, textAlign: 'center', whiteSpace: 'nowrap', background: on ? 'var(--accent-soft)' : 'transparent', color: on ? 'var(--accent)' : 'var(--ink-2)', fontWeight: on ? 500 : 400 });
+    const sortOpts = [['order', 'Reading order'], ['newest', 'Newest']].map(([k, l]) => ({ label: l, style: segStyle(s.sort === k), onClick: () => this.setState({ sort: k }) }));
+
+    const contPost = s.recent.map(postById).find(p => p && (s.readPct[p.id] || 0) < 95 && (s.readPct[p.id] || 0) > 0);
+    const cont = contPost ? { title: contPost.title, meta: `${chain(contPost.folder).map(f => f.name).join(' / ')} · ${Math.max(1, Math.ceil(contPost.mins * (1 - (s.readPct[contPost.id] || 0) / 100)))} min left`, onClick: () => this.go('post', contPost.id), barStyle: { display: 'block', height: 3, width: `${s.readPct[contPost.id]}%`, background: 'var(--accent)' } } : null;
+    const bookmarkRows = s.bookmarks.map(postById).filter(Boolean).slice(0, 4).map(p => ({ title: p.title, onClick: () => this.go('post', p.id) }));
+    const shelves = FOLDERS.filter(f => !f.parent).map(f => { const ps = postsUnder(f.id); const nf = descFolders(f.id).length - 1; return { name: f.name, meta: `${ps.length} posts · ${nf} folder${nf === 1 ? '' : 's'}`, onClick: () => this.go('folder', f.id), posts: [...ps].sort(byNewest).slice(0, 3).map(p => ({ title: p.title, onClick: () => this.go('post', p.id) })) }; });
+    const latest = [...POSTS].sort(byNewest).slice(0, 5).map(p => ({ title: p.title, path: chain(p.folder).map(f => f.name).join(' / '), meta: `${p.mins} min · ${fmt(p.date)}`, onClick: () => this.go('post', p.id) }));
+
+    const groups = [
+      ['Text size', 'size', [['s', 'A−'], ['m', 'A'], ['l', 'A+']]],
+      ['Line width', 'width', [['narrow', 'Narrow'], ['normal', 'Normal'], ['wide', 'Wide']]],
+      ['Font', 'font', [['serif', 'Serif'], ['sans', 'Sans']]],
+      ['Theme', 'theme', [['light', 'Light'], ['sepia', 'Sepia'], ['dark', 'Dark']]]
+    ];
+    const settingGroups = groups.map(([label, k, opts]) => ({ label, opts: opts.map(([v, l]) => ({ label: l, style: segStyle(pf[k] === v), onClick: () => this.setPref(k, v) })) }));
+
+    const frameStyle = this.props.layout === 'mobile'
+      ? { width: 390, height: 844, maxHeight: 'calc(100vh - 32px)', borderRadius: 28, border: '1px solid var(--line)', overflow: 'hidden', display: 'flex', flexDirection: 'column', background: 'var(--bg)', position: 'relative', boxShadow: '0 20px 60px var(--shadow)' }
+      : { width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)', position: 'relative', overflow: 'hidden' };
+    const mNavStyle = on => ({ width: 44, height: 44, display: 'grid', placeItems: 'center', borderRadius: 8, color: 'var(--ink-2)', opacity: on ? 1 : 0.3 });
+    const themeOrder = ['light', 'sepia', 'dark'];
+
+    return {
+      themeVars: THEMES[pf.theme] || THEMES.light, frameStyle, rootRef: this.rootRef, scrollRef: this.scrollRef, searchRef: this.searchRef,
+      isMobile: mobile, rail, showFullSide: !rail, sideStyle, drawerOpen: mobile && s.drawer,
+      openDrawer: () => this.setState({ drawer: true }), closeDrawer: () => this.setState({ drawer: false }),
+      collapseSide: () => mobile ? this.setState({ drawer: false }) : this.setState({ focus: true }),
+      collapseIcon: mobile ? 'ph ph-x' : 'ph ph-caret-double-left', collapseTitle: mobile ? 'Close' : 'Hide folders',
+      expandSide: () => this.setState({ focus: false }),
+      railSearch: () => this.setState({ focus: false }, () => setTimeout(() => this.searchRef.current?.focus(), 220)),
+      goHome: () => this.go('home'),
+      query: s.query, onQuery: e => this.setState({ query: e.target.value }), noResults: !!q && rows.length === 0,
+      treeLabel: q ? 'Matches' : 'Folders',
+      showRecent: !q && s.recent.length > 0,
+      recentRows: s.recent.map(postById).filter(Boolean).map(p => ({ title: p.title, onClick: () => this.go('post', p.id) })),
+      collapseAll: () => this.setState({ expanded: {} }), rows,
+      settingsOpen: s.settings, toggleSettings: () => this.setState(st => ({ settings: !st.settings })), settingsLabel: mobile ? '' : 'Reading',
+      cycleTheme: () => this.setPref('theme', themeOrder[(themeOrder.indexOf(pf.theme) + 1) % 3]),
+      themeIcon: pf.theme === 'dark' ? 'ph ph-moon' : pf.theme === 'sepia' ? 'ph ph-coffee' : 'ph ph-sun',
+      progressStyle: { height: 2, width: isPost ? `${s.progress * 100}%` : 0, background: 'var(--accent)', transition: 'width .1s linear' },
+      onScroll: this.onScroll, isPost, isFolder, isHome, postGrid, articleStyle, showToc,
+      crumbs, post: { ...post, dateLabel: fmt(post.date) }, blocks, toc, prev, next, folderName: folderById(post.folder).name,
+      commentCount: comments.length, comments, minsLeft,
+      toComments: () => { const el = this.scrollRef.current, c = el?.querySelector('[data-comments]'); if (c) el.scrollTo({ top: c.offsetTop - 24, behavior: 'smooth' }); },
+      toTop: () => this.scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' }),
+      toggleBookmark: () => this.toggleBm(post.id),
+      bookmarkIcon: bm ? 'ph-fill ph-bookmark-simple' : 'ph ph-bookmark-simple', bookmarkLabel: bm ? 'Bookmarked' : 'Bookmark',
+      bookmarkBtnStyle: { height: 32, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 6, borderRadius: 8, fontSize: 13, border: `1px solid ${bm ? 'var(--accent)' : 'var(--line)'}`, color: bm ? 'var(--accent)' : 'var(--ink-2)' },
+      draft: s.draft, onDraft: e => this.setState({ draft: e.target.value }),
+      postComment: () => { const t = s.draft.trim(); if (!t) return; const d = new Date(); this.setState(st => ({ draft: '', comments: { ...st.comments, [post.id]: [...(st.comments[post.id] || []), { name: 'You', date: `${MON[d.getMonth()]} ${d.getDate()}`, text: t }] } })); },
+      postBtnStyle: { height: 34, padding: '0 14px', borderRadius: 8, fontSize: 13.5, fontWeight: 500, border: '1px solid var(--accent)', color: 'var(--accent)', opacity: s.draft.trim() ? 1 : 0.45, cursor: s.draft.trim() ? 'pointer' : 'default' },
+      folder, hasSubs: subs.length > 0, subs, postsLabel: `${direct ? 'Posts' : 'All posts'} · ${folderPosts.length}`, sortOpts, folderPosts,
+      cont, bookmarkRows, bookmarkCount: s.bookmarks.length, noBookmarks: bookmarkRows.length === 0, shelves, latest,
+      mobileBar: mobile && isPost, tocSheet: mobile && s.tocSheet,
+      openTocSheet: () => this.setState({ tocSheet: true }), closeTocSheet: () => this.setState({ tocSheet: false }),
+      mPrev: () => prev && prev.onClick(), mNext: () => next && next.onClick(), mPrevStyle: mNavStyle(!!prev), mNextStyle: mNavStyle(!!next),
+      settingGroups,
+      loaderOn: !s.loaderGone && this.props.showLoader !== false,
+      loaderStyle: { position: 'absolute', inset: 0, zIndex: 50, background: 'var(--bg)', display: 'grid', placeItems: 'center', opacity: s.loaderFade ? 0 : 1, transition: 'opacity .4s ease', pointerEvents: s.loaderFade ? 'none' : 'auto' },
+      loaderDot: this.dotEl || (this.dotEl = React.createElement('span', { style: { color: 'var(--accent)', display: 'inline-block', animation: 'nnDot 1s ease-in-out infinite' } }, '.'))
+    };
+  }
+}
+</script>
+</body>
+</html>

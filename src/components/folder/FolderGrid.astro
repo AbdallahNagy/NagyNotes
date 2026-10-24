@@ -1,0 +1,66 @@
+---
+import Icon from '@/components/ui/Icon.astro';
+import { formatCount } from '@/lib/format';
+import type { FolderCard } from '@/lib/content/types';
+
+interface Props {
+  folders: FolderCard[];
+}
+
+const { folders } = Astro.props;
+---
+
+<div class="grid">
+  {folders.map((folder) => (
+    <a class="card" href={folder.url}>
+      <Icon name="folder-simple" size={20} class="icon" />
+      <span class="text">
+        <span class="name">{folder.name}</span>
+        <span class="meta">{formatCount(folder.postCount, 'post')}</span>
+      </span>
+    </a>
+  ))}
+</div>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+  }
+
+  .card :global(.icon) {
+    flex: none;
+    color: var(--accent);
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .name {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .meta {
+    color: var(--ink-3);
+    font-size: 13px;
+  }
+</style>
