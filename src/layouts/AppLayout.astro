@@ -30,6 +30,7 @@ const index = buildPostIndex(library);
       <Sidebar
         client:load
         transition:persist="sidebar"
+        transition:persist-props
         tree={tree}
         index={index}
         initialPath={Astro.url.pathname}

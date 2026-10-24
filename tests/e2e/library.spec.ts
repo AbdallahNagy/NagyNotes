@@ -114,3 +114,54 @@ test.describe('library', () => {
     await expect(page.getByRole('navigation', { name: 'Folders' })).toBeVisible();
   });
 });
+
+test.describe('sidebar across client navigations', () => {
+  test('never duplicates rows or marks, however the reader navigates', async ({
+    page,
+    isMobile,
+  }) => {
+    await page.goto(POST_PATH);
+    await openSidebar(page, isMobile);
+    await page.getByRole('button', { name: 'Collapse all' }).click();
+    if (isMobile) await page.getByRole('button', { name: 'Close' }).click();
+
+    const tree = page.getByRole('navigation', { name: 'Folders' });
+    const expectCleanTree = async () => {
+      const rows = tree.locator('li:has(> div > a)');
+      const texts = await rows.evaluateAll((items) =>
+        items.map((item) => item.querySelector('a')?.textContent ?? ''),
+      );
+      expect(new Set(texts).size).toBe(texts.length);
+      const marks = await rows.evaluateAll((items) =>
+        items.map((item) => item.querySelectorAll(':scope > div > svg').length),
+      );
+      expect(Math.max(0, ...marks)).toBeLessThanOrEqual(1);
+    };
+
+    await page.getByRole('link', { name: 'Nagy Notes.' }).click();
+    await expect(page).toHaveURL('/');
+    await page
+      .locator('main')
+      .getByRole('link', { name: /client credentials/ })
+      .first()
+      .click();
+    await expect(page).toHaveURL(/client-credentials$/);
+    await page.getByRole('button', { name: 'Bookmark', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Bookmarked' })).toBeVisible();
+    await expectCleanTree();
+
+    await page.locator('main').getByRole('navigation').getByRole('link', { name: 'APIs' }).click();
+    await expect(page).toHaveURL('/apis');
+    await expectCleanTree();
+
+    await page
+      .locator('main')
+      .getByRole('link', { name: /client credentials/ })
+      .first()
+      .click();
+    await expect(page).toHaveURL(/client-credentials$/);
+    await expectCleanTree();
+    await openSidebar(page, isMobile);
+    await expect(tree.getByRole('link', { name: /client credentials/ })).toHaveCount(1);
+  });
+});
