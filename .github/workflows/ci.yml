@@ -62,6 +62,21 @@ jobs:
       name: production
       url: ${{ vars.SITE_URL }}
     steps:
+      - name: Check deploy settings
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          missing=0
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_PAGES_PROJECT SITE_URL; do
+            if [ -z "${!name}" ]; then
+              echo "::error::$name is not set. Add it under Settings → Secrets and variables → Actions (see README, Cloudflare Pages)."
+              missing=1
+            fi
+          done
+          exit $missing
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4

@@ -4,7 +4,8 @@ import sitemap from '@astrojs/sitemap';
 import { satteri } from '@astrojs/markdown-satteri';
 import { codeBlockPlugin } from './src/lib/markdown/code-block.ts';
 
-const site = process.env.SITE_URL ?? 'https://nagynotes.example.com';
+// `||`, not `??`: an unset GitHub Actions variable arrives as an empty string.
+const site = process.env.SITE_URL || 'https://nagynotes.example.com';
 
 export default defineConfig({
   site,
