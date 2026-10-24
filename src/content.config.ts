@@ -3,7 +3,8 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
-const base = './src/content/posts';
+/** CONTENT_DIR lets the e2e suite build against its own fixture posts instead of the real ones. */
+const base = process.env.CONTENT_DIR ?? './src/content/posts';
 
 const posts = defineCollection({
   loader: glob({

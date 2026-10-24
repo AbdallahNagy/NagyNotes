@@ -47,6 +47,10 @@ with a desktop and a phone viewport. Install the browser once with
 `pnpm exec playwright install chromium`. If Chromium is already installed in a revision other than
 the one Playwright expects, point `PW_CHROMIUM_PATH` at its executable instead.
 
+The suite does not use your posts: it builds against the fixture posts in
+`tests/e2e/content/posts/` (via the `CONTENT_DIR` environment variable), so you can add, move or
+delete real content without breaking it.
+
 ## Writing posts
 
 Posts are Markdown files under `src/content/posts/`. The folder tree is the folder structure:
@@ -93,8 +97,8 @@ order: 1
 - Reading time is words / 230, rounded up. Second-level headings (`##`) form "On this page".
 - Fenced code blocks are highlighted by Shiki (three quiet themes, one per reading theme) and get a
   language label and a copy button. The label is the language exactly as written in the fence.
-- The 13 posts shipped with the repository are seed content. Eleven of them carry
-  `<!-- seed content: replace before publishing -->` at the top of the body; replace them.
+- The original seed posts live on as e2e fixtures in `tests/e2e/content/posts/`; edit those only
+  together with the tests that rely on them.
 
 ## Comments (Supabase)
 
@@ -156,7 +160,7 @@ src/views/           Page bodies for posts and folders
 src/pages/           Routes: home, [...path], 404, rss.xml
 src/styles/          Design tokens, base styles and article typography
 supabase/migrations/ Database schema for comments
-tests/unit, tests/e2e
+tests/unit, tests/e2e Unit and end-to-end tests; tests/e2e/content holds the e2e fixture posts
 ```
 
 State that belongs to the reader (theme, reading settings, bookmarks, recently opened posts, read

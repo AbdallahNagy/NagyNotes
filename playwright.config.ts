@@ -20,6 +20,8 @@ export default defineConfig({
     // --ignore-lock keeps the server in the foreground, which Playwright needs, even when the
     // command is started by an AI agent (Astro otherwise backgrounds the preview server).
     command: 'pnpm build && pnpm preview --ignore-lock',
+    // The suite asserts on known posts, so it builds against fixtures rather than src/content.
+    env: { CONTENT_DIR: './tests/e2e/content/posts' },
     url: `http://localhost:${port}`,
     reuseExistingServer: !isCI,
     timeout: 180_000,
