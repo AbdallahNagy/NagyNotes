@@ -1,4 +1,5 @@
 import type { PostIndexEntry } from '@/lib/content/types';
+import { PostListRow } from './PostListRow';
 import styles from './SearchResults.module.css';
 
 interface SearchResultsProps {
@@ -17,14 +18,7 @@ export function SearchResults({ results, query, currentPath }: SearchResultsProp
     <ul aria-label="Matching posts">
       {results.map((post) => (
         <li key={post.id}>
-          <a
-            class={styles.row}
-            href={post.url}
-            aria-current={post.url === currentPath ? 'page' : undefined}
-          >
-            <span class={styles.title}>{post.title}</span>
-            <span class={styles.folder}>{post.folderPath[0]}</span>
-          </a>
+          <PostListRow post={post} active={post.url === currentPath} />
         </li>
       ))}
     </ul>

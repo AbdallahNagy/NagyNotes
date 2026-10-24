@@ -1,0 +1,25 @@
+.group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: -6px -4px;
+}
+
+.button {
+  border-radius: var(--radius-sm);
+  color: var(--ink-3);
+}
+
+.button:hover {
+  color: var(--ink);
+}
+
+.button:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.button[aria-pressed='true'] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}

@@ -9,20 +9,30 @@ import {
   $sidebar,
   collapseAllFolders,
   expandFolders,
+  expandNextLevel,
   setSidebarRail,
+  setSidebarView,
   toggleFolder,
+  type SidebarState,
 } from '@/lib/client/library-state';
 import { SIDEBAR_WIDTH } from '@/lib/client/sidebar-width';
 import { useMediaQuery } from '@/lib/client/use-media-query';
 import { useSearch } from '@/lib/client/use-search';
 import { $drawerOpen } from '@/lib/client/ui-state';
-import { foldersToReveal, normalizePath } from '@/lib/content/sidebar-tree';
+import {
+  flatPostsNewestFirst,
+  foldersToReveal,
+  nextExpandDepth,
+  normalizePath,
+} from '@/lib/content/sidebar-tree';
 import type { PostIndexEntry, SidebarNode } from '@/lib/content/types';
+import { FlatPostList } from './FlatPostList';
 import { FolderTree } from './FolderTree';
 import { RecentList } from './RecentList';
 import { SearchResults } from './SearchResults';
 import { SidebarFilter } from './SidebarFilter';
 import { SidebarResizer } from './SidebarResizer';
+import { TreeControls } from './TreeControls';
 import { useDrawer } from './use-drawer';
 import styles from './Sidebar.module.css';
 
@@ -38,11 +48,12 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
   const [query, setQuery] = useState('');
   const filterRef = useRef<HTMLInputElement>(null);
   const matches = useSearch(query, index);
-  const serverState = useMemo(
+  const serverState = useMemo<SidebarState>(
     () => ({
       expanded: foldersToReveal(tree, initialPath),
       rail: false,
       width: SIDEBAR_WIDTH.default,
+      view: 'tree',
     }),
     [tree, initialPath],
   );
@@ -74,11 +85,18 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
   };
 
   const expanded = useMemo(() => new Set(sidebar.expanded), [sidebar.expanded]);
+  const flatPosts = useMemo(() => flatPostsNewestFirst(index), [index]);
+  const canExpand = nextExpandDepth(tree, expanded) !== null;
   const bookmarkSet = useMemo(() => new Set(bookmarks), [bookmarks]);
   const recentEntries = useMemo(() => {
     const byId = new Map(index.map((entry) => [entry.id, entry]));
     return recent.flatMap((id) => byId.get(id) ?? []);
   }, [index, recent]);
+
+  const flat = sidebar.view === 'flat';
+  const sectionLabel =
+    matches !== null ? 'Matches' : flat ? `All posts · ${index.length}` : 'Folders';
+  const navLabel = matches !== null ? 'Search results' : flat ? 'All posts' : 'Folders';
 
   return (
     <>
@@ -115,17 +133,29 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
           <div class={styles.scroll}>
             {matches === null && <RecentList entries={recentEntries} />}
             <div class={styles.foldersHeader}>
-              <span class={styles.sectionLabelInline}>
-                {matches === null ? 'Folders' : 'Matches'}
-              </span>
+              <span class={styles.sectionLabelInline}>{sectionLabel}</span>
               {matches === null && (
-                <button type="button" class={styles.collapseAll} onClick={collapseAllFolders}>
-                  Collapse all
-                </button>
+                <TreeControls
+                  view={sidebar.view}
+                  canExpand={canExpand}
+                  canCollapse={expanded.size > 0}
+                  onExpand={() => expandNextLevel(tree)}
+                  onCollapse={collapseAllFolders}
+                  onViewChange={setSidebarView}
+                />
               )}
             </div>
-            <nav aria-label={matches === null ? 'Folders' : 'Search results'}>
-              {matches === null ? (
+            <nav aria-label={navLabel}>
+              {matches !== null ? (
+                <SearchResults results={matches} query={query} currentPath={currentPath} />
+              ) : flat ? (
+                <FlatPostList
+                  posts={flatPosts}
+                  currentPath={currentPath}
+                  bookmarks={bookmarkSet}
+                  progress={progress}
+                />
+              ) : (
                 <FolderTree
                   nodes={tree}
                   expanded={expanded}
@@ -134,8 +164,6 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
                   progress={progress}
                   onToggle={toggleFolder}
                 />
-              ) : (
-                <SearchResults results={matches} query={query} currentPath={currentPath} />
               )}
             </nav>
           </div>

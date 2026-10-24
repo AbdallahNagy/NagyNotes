@@ -29,6 +29,9 @@ const NAMES = [
   'folder-simple',
   'book-open',
   'list-bullets',
+  'arrows-out-simple',
+  'arrows-in-simple',
+  'tree-structure',
 ];
 
 const entries = NAMES.map((name) => {

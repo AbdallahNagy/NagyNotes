@@ -81,15 +81,6 @@
   padding: 14px 8px 6px;
 }
 
-.collapseAll {
-  color: var(--ink-3);
-  font-size: 12px;
-}
-
-.collapseAll:hover {
-  color: var(--ink);
-}
-
 .scrim {
   display: none;
 }

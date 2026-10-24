@@ -2,6 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type * as LibraryState from '@/lib/client/library-state';
 import { STORAGE_KEYS } from '@/lib/client/storage-keys';
+import type { SidebarNode } from '@/lib/content/types';
 
 type State = typeof LibraryState;
 
@@ -92,7 +93,45 @@ describe('sidebar', () => {
     state.expandFolders(['a']);
     state.setSidebarRail(true);
     state.collapseAllFolders();
-    expect(state.$sidebar.get()).toEqual({ expanded: [], rail: true, width: 280 });
+    expect(state.$sidebar.get()).toEqual({
+      expanded: [],
+      rail: true,
+      width: 280,
+      view: 'tree',
+    });
+  });
+});
+
+describe('sidebar view and levels', () => {
+  const folder = (id: string, children: SidebarNode[] = []): SidebarNode => ({
+    kind: 'folder',
+    id,
+    url: `/${id}`,
+    name: id,
+    count: 0,
+    children,
+  });
+  const tree = [folder('a', [folder('a/x')]), folder('b')];
+
+  it('expands one level at a time and stops when everything is open', async () => {
+    const state = await loadState();
+    state.expandNextLevel(tree);
+    expect(state.$sidebar.get().expanded).toEqual(['a', 'b']);
+    state.expandNextLevel(tree);
+    expect(state.$sidebar.get().expanded).toEqual(['a', 'b', 'a/x']);
+    state.expandNextLevel(tree);
+    expect(state.$sidebar.get().expanded).toEqual(['a', 'b', 'a/x']);
+  });
+
+  it('remembers the view and ignores unknown stored values', async () => {
+    const state = await loadState();
+    state.setSidebarView('flat');
+    expect(state.$sidebar.get().view).toBe('flat');
+
+    const stored = await loadState({ [STORAGE_KEYS.sidebar]: '{"view":"grid"}' });
+    expect(stored.$sidebar.get().view).toBe('tree');
+    const flat = await loadState({ [STORAGE_KEYS.sidebar]: '{"view":"flat"}' });
+    expect(flat.$sidebar.get().view).toBe('flat');
   });
 });
 
@@ -127,7 +166,12 @@ describe('corrupt storage', () => {
     expect(state.$bookmarks.get()).toEqual([]);
     expect(state.$recent.get()).toEqual([]);
     expect(state.$progress.get()).toEqual({});
-    expect(state.$sidebar.get()).toEqual({ expanded: [], rail: false, width: 280 });
+    expect(state.$sidebar.get()).toEqual({
+      expanded: [],
+      rail: false,
+      width: 280,
+      view: 'tree',
+    });
   });
 
   it('keeps working when localStorage throws', async () => {
