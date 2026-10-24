@@ -79,3 +79,26 @@ test.describe('resizable sidebar', () => {
     await expectWidth(page, 380);
   });
 });
+
+test.describe('sidebar overflow', () => {
+  for (const width of [220, 280]) {
+    test(`never scrolls horizontally at ${width}px`, async ({ page, isMobile }) => {
+      test.skip(isMobile, 'the width is fixed in the drawer');
+      await page.goto(POST_PATH);
+      await page.evaluate((px) => {
+        document.documentElement.style.setProperty('--sidebar-width', `${px}px`);
+        const longTitle = 'A very long post title that has to be cut off with an ellipsis '.repeat(
+          3,
+        );
+        for (const title of document.querySelectorAll('#sidebar nav a')) title.prepend(longTitle);
+      }, width);
+
+      const scroll = page.locator('#sidebar div:has(> nav)');
+      const { scrollWidth, clientWidth } = await scroll.evaluate((el) => ({
+        scrollWidth: el.scrollWidth,
+        clientWidth: el.clientWidth,
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+    });
+  }
+});
