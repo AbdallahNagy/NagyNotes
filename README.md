@@ -1,12 +1,16 @@
 # Nagy Notes
 
 A personal technical blog by Abdallah Nagy: notes on Dynamics 365, the Power Platform, APIs and
-DevOps. Posts live in nested folders, are browsed with a collapsible folder tree, and are built
+DevOps. Posts live in nested folders, are browsed with a collapsible, resizable folder tree (or a flat newest-first list), and are built
 for comfortable reading: a calm palette, reader-controlled text settings and copyable code blocks.
 
 Built with [Astro](https://astro.build) 7 (static output), [Preact](https://preactjs.com) islands
 and [nanostores](https://github.com/nanostores/nanostores), searched with
 [Pagefind](https://pagefind.app), with comments on [Supabase](https://supabase.com).
+
+Press <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd> (or the header's Search button) to open the
+command palette: it searches post titles, body text, headings and code plus folder names, and
+browsing into a folder lists its subfolders and posts (<kbd>Backspace</kbd> goes back up).
 
 The design lives in [`docs/design`](docs/design/README.md) and the implementation plan in
 [`docs/PLAN.md`](docs/PLAN.md).

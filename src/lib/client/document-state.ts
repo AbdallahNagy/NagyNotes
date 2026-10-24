@@ -6,9 +6,15 @@ import { $drawerOpen, $settingsOpen } from './ui-state';
 const LOADED_ATTRIBUTE = 'data-loaded';
 const RAIL_ATTRIBUTE = 'data-rail';
 
+export function applySidebarWidth(root: HTMLElement, width: number): void {
+  root.style.setProperty('--sidebar-width', `${width}px`);
+}
+
 function syncDocument(root: HTMLElement): void {
+  const sidebar = $sidebar.get();
   applyPrefs(root, $prefs.get());
-  root.toggleAttribute(RAIL_ATTRIBUTE, $sidebar.get().rail);
+  root.toggleAttribute(RAIL_ATTRIBUTE, sidebar.rail);
+  applySidebarWidth(root, sidebar.width);
 }
 
 function resetScroll(): void {

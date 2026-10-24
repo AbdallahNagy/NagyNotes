@@ -22,3 +22,15 @@ export async function openSidebar(page: Page, isMobile: boolean): Promise<void> 
   await page.getByRole('button', { name: 'Open library' }).click();
   await expect(page.locator('#sidebar')).toHaveAttribute('data-open', '');
 }
+
+/** Asserts the page's content column sits in the middle of <main>, not against its left edge. */
+export async function expectCentred(page: Page, column: string): Promise<void> {
+  const gaps = await page.evaluate((selector) => {
+    const main = document.getElementById('main')?.getBoundingClientRect();
+    const box = document.querySelector(selector)?.getBoundingClientRect();
+    if (!main || !box) throw new Error(`Missing ${selector} or #main`);
+    return { left: box.left - main.left, right: main.right - box.right };
+  }, column);
+  expect(gaps.left).toBeGreaterThan(40);
+  expect(Math.abs(gaps.left - gaps.right)).toBeLessThanOrEqual(20);
+}

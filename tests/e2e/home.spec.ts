@@ -1,4 +1,4 @@
-import { expect, test } from './fixtures';
+import { expect, expectCentred, test } from './fixtures';
 
 test.describe('home', () => {
   test('shows the heading, browse folders and the five latest posts', async ({ page }) => {
@@ -17,6 +17,14 @@ test.describe('home', () => {
     await expect(latest.getByRole('listitem').first()).toContainText(
       "Web resources that don't fight you",
     );
+  });
+
+  test('the content column is centred on wide screens', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'the column fills a narrow screen');
+    await page.goto('/');
+    await expectCentred(page, '.home');
+    await page.goto('/no-such-page');
+    await expectCentred(page, '.missing');
   });
 
   test('a folder card opens the folder page', async ({ page }) => {

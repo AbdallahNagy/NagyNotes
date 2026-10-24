@@ -1,15 +1,25 @@
 import { persistentJsonAtom } from './persistent';
+import { folderIdsAtDepth, nextExpandDepth } from '@/lib/content/sidebar-tree';
+import type { SidebarNode } from '@/lib/content/types';
+import { clampSidebarWidth, SIDEBAR_WIDTH } from './sidebar-width';
 import { STORAGE_KEYS } from './storage-keys';
 
 export const MAX_RECENT = 3;
 /** A post counts as read once this share of it has scrolled past. */
 export const READ_THRESHOLD = 95;
 
+export const SIDEBAR_VIEWS = ['tree', 'flat'] as const;
+export type SidebarView = (typeof SIDEBAR_VIEWS)[number];
+
 export interface SidebarState {
   /** Ids of the folders that are open in the tree. */
   expanded: string[];
   /** Desktop only: the sidebar is collapsed to its icon rail. */
   rail: boolean;
+  /** Desktop width in px; kept while the sidebar is collapsed to the rail. */
+  width: number;
+  /** Nested folders, or every post in one list. */
+  view: SidebarView;
 }
 
 const isStringArray = (value: unknown): value is string[] =>
@@ -28,10 +38,15 @@ function parseProgress(raw: unknown, fallback: Record<string, number>): Record<s
 
 function parseSidebar(raw: unknown, fallback: SidebarState): SidebarState {
   if (typeof raw !== 'object' || raw === null) return fallback;
-  const { expanded, rail } = raw as Record<string, unknown>;
+  const { expanded, rail, width, view } = raw as Record<string, unknown>;
   return {
     expanded: isStringArray(expanded) ? expanded : fallback.expanded,
     rail: typeof rail === 'boolean' ? rail : fallback.rail,
+    width:
+      typeof width === 'number' && Number.isFinite(width)
+        ? clampSidebarWidth(width)
+        : fallback.width,
+    view: SIDEBAR_VIEWS.find((option) => option === view) ?? fallback.view,
   };
 }
 
@@ -54,7 +69,7 @@ export const $progress = persistentJsonAtom<Record<string, number>>(
 
 export const $sidebar = persistentJsonAtom<SidebarState>(
   STORAGE_KEYS.sidebar,
-  { expanded: [], rail: false },
+  { expanded: [], rail: false, width: SIDEBAR_WIDTH.default, view: 'tree' },
   parseSidebar,
 );
 
@@ -94,10 +109,24 @@ export function expandFolders(folderIds: readonly string[]): void {
   if (missing.length > 0) $sidebar.set({ ...state, expanded: [...state.expanded, ...missing] });
 }
 
+/** Opens every folder at the shallowest depth that still has a closed one. */
+export function expandNextLevel(tree: readonly SidebarNode[]): void {
+  const depth = nextExpandDepth(tree, new Set($sidebar.get().expanded));
+  if (depth !== null) expandFolders(folderIdsAtDepth(tree, depth));
+}
+
 export function collapseAllFolders(): void {
   $sidebar.set({ ...$sidebar.get(), expanded: [] });
 }
 
 export function setSidebarRail(rail: boolean): void {
   $sidebar.set({ ...$sidebar.get(), rail });
+}
+
+export function setSidebarWidth(width: number): void {
+  $sidebar.set({ ...$sidebar.get(), width: clampSidebarWidth(width) });
+}
+
+export function setSidebarView(view: SidebarView): void {
+  $sidebar.set({ ...$sidebar.get(), view });
 }

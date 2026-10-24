@@ -1,0 +1,254 @@
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  min-width: 200px;
+  padding: 0 6px 0 10px;
+  margin-right: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ink-3);
+  font-size: 14px;
+}
+
+.trigger:hover {
+  border-color: var(--ink-3);
+  color: var(--ink-2);
+}
+
+.triggerLabel {
+  flex: 1;
+}
+
+.triggerKey {
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.dialog {
+  width: min(640px, calc(100vw - 32px));
+  max-width: none;
+  max-height: none;
+  margin: 12vh auto 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  overflow: visible;
+}
+
+.dialog::backdrop {
+  background: var(--scrim);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  max-height: min(560px, 76vh);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--bg);
+  box-shadow: 0 24px 64px var(--shadow);
+  overflow: hidden;
+}
+
+.inputRow {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.inputIcon {
+  flex: none;
+  color: var(--ink-3);
+}
+
+.scope {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  max-width: 50%;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 54px;
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--ink-3);
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 0 8px;
+}
+
+.status {
+  padding: 20px 16px;
+  color: var(--ink-3);
+  font-size: 14px;
+  text-align: center;
+}
+
+.groupLabel {
+  padding: 12px 18px 6px;
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  margin: 0 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  color: var(--ink-2);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.active {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+.itemIcon {
+  flex: none;
+  color: var(--ink-3);
+}
+
+.folderIcon {
+  color: var(--accent);
+}
+
+.itemTitle {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemMeta {
+  flex: 0 1 auto;
+  max-width: 45%;
+  color: var(--ink-3);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemCount {
+  flex: none;
+  min-width: 16px;
+  color: var(--ink-3);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.match {
+  border-radius: 2px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.footer {
+  display: flex;
+  flex: none;
+  gap: 16px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.footer kbd {
+  display: inline-block;
+  min-width: 18px;
+  margin-right: 2px;
+  padding: 0 4px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  text-align: center;
+}
+
+@media (max-width: 759.98px) {
+  .trigger {
+    width: 40px;
+    min-width: 0;
+    height: 40px;
+    margin-right: 0;
+    padding: 0;
+    justify-content: center;
+    border: 0;
+    background: none;
+    color: var(--ink-2);
+  }
+
+  .trigger:hover {
+    background: var(--hover);
+  }
+
+  /* Still the button's accessible name; only hidden from view. */
+  .triggerLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .triggerKey,
+  .footer,
+  .itemMeta {
+    display: none;
+  }
+
+  .dialog {
+    margin-top: 8px;
+  }
+}

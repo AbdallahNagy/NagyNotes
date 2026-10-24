@@ -1,7 +1,7 @@
 import { Icon } from '@/components/ui/Icon';
 import { cx } from '@/lib/client/cx';
-import { READ_THRESHOLD } from '@/lib/client/library-state';
 import type { SidebarNode } from '@/lib/content/types';
+import { postStatus, STATUS_ICON } from './post-status';
 import styles from './FolderTree.module.css';
 
 interface TreeState {
@@ -18,15 +18,6 @@ interface FolderTreeProps extends TreeState {
 }
 
 const indent = (depth: number) => ({ paddingLeft: `${4 + depth * 16}px` });
-
-type PostStatus = 'bookmarked' | 'read';
-
-const STATUS_ICON = { bookmarked: 'bookmark-simple-fill', read: 'check' } as const;
-
-function postStatus(bookmarked: boolean, percent: number): PostStatus | null {
-  if (bookmarked) return 'bookmarked';
-  return percent >= READ_THRESHOLD ? 'read' : null;
-}
 
 export function FolderTree({ nodes, depth = 0, ...state }: FolderTreeProps) {
   const { expanded, currentPath, bookmarks, progress, onToggle } = state;
