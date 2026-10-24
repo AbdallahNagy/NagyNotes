@@ -17,7 +17,7 @@ The design lives in [`docs/design`](docs/design/README.md) and the implementatio
 
 ## Getting started
 
-Requirements: Node.js 22.23.4 or newer (see `.nvmrc`) and [pnpm](https://pnpm.io) 10.
+Requirements: Node.js 22.23.4 or newer (CI uses Node 24, see `.nvmrc`) and [pnpm](https://pnpm.io) 10.
 
 ```sh
 pnpm install
