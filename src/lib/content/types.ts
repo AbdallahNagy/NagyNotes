@@ -88,3 +88,9 @@ export interface FolderCard {
   postCount: number;
   folderCount: number;
 }
+
+/** The whole library in the shape client islands use; served as `/library.json`. */
+export interface LibraryData {
+  tree: SidebarNode[];
+  index: PostIndexEntry[];
+}

@@ -32,6 +32,7 @@ const NAMES = [
   'arrows-out-simple',
   'arrows-in-simple',
   'tree-structure',
+  'file-text',
 ];
 
 const entries = NAMES.map((name) => {

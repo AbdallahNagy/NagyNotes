@@ -8,6 +8,10 @@ Built with [Astro](https://astro.build) 7 (static output), [Preact](https://prea
 and [nanostores](https://github.com/nanostores/nanostores), searched with
 [Pagefind](https://pagefind.app), with comments on [Supabase](https://supabase.com).
 
+Press <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd> (or the header's Search button) to open the
+command palette: it searches post titles, body text, headings and code plus folder names, and
+browsing into a folder lists its subfolders and posts (<kbd>Backspace</kbd> goes back up).
+
 The design lives in [`docs/design`](docs/design/README.md) and the implementation plan in
 [`docs/PLAN.md`](docs/PLAN.md).
 
