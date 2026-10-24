@@ -82,8 +82,10 @@ test.describe('theme and reading settings', () => {
     const dialog = page.getByRole('dialog', { name: 'Reading settings' });
 
     await page.getByRole('button', { name: 'Reading settings' }).click();
-    await expect(dialog).toBeVisible();
-    await page.mouse.click(5, 880);
+    await expect(dialog.getByRole('radio', { name: 'A', exact: true })).toBeFocused();
+    const viewport = page.viewportSize();
+    if (!viewport) throw new Error('No viewport');
+    await page.mouse.click(5, viewport.height - 5);
     await expect(dialog).toBeHidden();
   });
 
@@ -100,6 +102,8 @@ test.describe('theme and reading settings', () => {
   test('arrow keys move the selection inside a setting group', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Reading settings' }).click();
+    // Opening moves focus into the popover; wait for it before moving focus ourselves.
+    await expect(page.getByRole('radio', { name: 'A', exact: true })).toBeFocused();
     const theme = page.getByRole('radiogroup', { name: 'Theme' });
 
     await theme.getByRole('radio', { name: 'Light' }).focus();

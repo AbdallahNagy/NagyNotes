@@ -1,5 +1,5 @@
 import type { RefObject } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useLayoutEffect } from 'preact/hooks';
 
 interface DismissableOptions {
   open: boolean;
@@ -15,6 +15,7 @@ interface DismissableOptions {
 /**
  * Behaviour shared by popups: focus moves in when one opens, Escape (and optionally an outside
  * click) closes it, and focus returns to where it was when nothing else has claimed it.
+ * A layout effect, so focus and listeners are in place as soon as the popup is on screen.
  */
 export function useDismissable({
   open,
@@ -24,7 +25,7 @@ export function useDismissable({
   initialFocus,
   closeOnOutsideClick = false,
 }: DismissableOptions): void {
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!open) return;
 
     const opener = document.activeElement;
