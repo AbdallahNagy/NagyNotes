@@ -1,6 +1,12 @@
-import { expect, test } from './fixtures';
+import { expect, expectCentred, test } from './fixtures';
 
 test.describe('folder page', () => {
+  test('the content column is centred on wide screens', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'the column fills a narrow screen');
+    await page.goto('/apis');
+    await expectCentred(page, '.folder');
+  });
+
   test('lists subfolders and posts with counts', async ({ page }) => {
     await page.goto('/apis/authentication');
 
