@@ -14,9 +14,9 @@ export type SidebarView = (typeof SIDEBAR_VIEWS)[number];
 export interface SidebarState {
   /** Ids of the folders that are open in the tree. */
   expanded: string[];
-  /** Desktop only: the sidebar is collapsed to its icon rail. */
-  rail: boolean;
-  /** Desktop width in px; kept while the sidebar is collapsed to the rail. */
+  /** Desktop only: the sidebar is closed completely. */
+  hidden: boolean;
+  /** Desktop width in px; kept while the sidebar is hidden. */
   width: number;
   /** Nested folders, or every post in one list. */
   view: SidebarView;
@@ -38,10 +38,10 @@ function parseProgress(raw: unknown, fallback: Record<string, number>): Record<s
 
 function parseSidebar(raw: unknown, fallback: SidebarState): SidebarState {
   if (typeof raw !== 'object' || raw === null) return fallback;
-  const { expanded, rail, width, view } = raw as Record<string, unknown>;
+  const { expanded, hidden, width, view } = raw as Record<string, unknown>;
   return {
     expanded: isStringArray(expanded) ? expanded : fallback.expanded,
-    rail: typeof rail === 'boolean' ? rail : fallback.rail,
+    hidden: typeof hidden === 'boolean' ? hidden : fallback.hidden,
     width:
       typeof width === 'number' && Number.isFinite(width)
         ? clampSidebarWidth(width)
@@ -69,7 +69,7 @@ export const $progress = persistentJsonAtom<Record<string, number>>(
 
 export const $sidebar = persistentJsonAtom<SidebarState>(
   STORAGE_KEYS.sidebar,
-  { expanded: [], rail: false, width: SIDEBAR_WIDTH.default, view: 'tree' },
+  { expanded: [], hidden: false, width: SIDEBAR_WIDTH.default, view: 'tree' },
   parseSidebar,
 );
 
@@ -119,8 +119,8 @@ export function collapseAllFolders(): void {
   $sidebar.set({ ...$sidebar.get(), expanded: [] });
 }
 
-export function setSidebarRail(rail: boolean): void {
-  $sidebar.set({ ...$sidebar.get(), rail });
+export function setSidebarHidden(hidden: boolean): void {
+  $sidebar.set({ ...$sidebar.get(), hidden });
 }
 
 export function setSidebarWidth(width: number): void {

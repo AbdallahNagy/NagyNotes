@@ -1,15 +1,12 @@
 import { useRef } from 'preact/hooks';
 import { applySidebarWidth } from '@/lib/client/document-state';
-import { setSidebarRail, setSidebarWidth } from '@/lib/client/library-state';
-import {
-  clampSidebarWidth,
-  dragPreviewWidth,
-  releaseDrag,
-  SIDEBAR_WIDTH,
-} from '@/lib/client/sidebar-width';
+import { setSidebarHidden, setSidebarWidth } from '@/lib/client/library-state';
+import { clampSidebarWidth, resolveDrag, SIDEBAR_WIDTH } from '@/lib/client/sidebar-width';
 import styles from './SidebarResizer.module.css';
 
 const RESIZING_ATTRIBUTE = 'data-resizing';
+/** Set while a drag has gone past the minimum width: the sidebar animates closed. */
+const CLOSING_ATTRIBUTE = 'data-sidebar-closing';
 
 interface Drag {
   pointerId: number;
@@ -29,6 +26,7 @@ export function SidebarResizer({ width }: { width: number }) {
     handleRef.current?.releasePointerCapture(pointerId);
     dragRef.current = null;
     root.removeAttribute(RESIZING_ATTRIBUTE);
+    root.removeAttribute(CLOSING_ATTRIBUTE);
     applySidebarWidth(root, restoreWidth);
   };
 
@@ -49,16 +47,19 @@ export function SidebarResizer({ width }: { width: number }) {
     const drag = dragRef.current;
     if (drag?.pointerId !== event.pointerId) return;
     drag.raw = drag.startWidth + event.clientX - drag.startX;
-    applySidebarWidth(document.documentElement, dragPreviewWidth(drag.raw));
+    const root = document.documentElement;
+    const result = resolveDrag(drag.raw);
+    root.toggleAttribute(CLOSING_ATTRIBUTE, result.close);
+    if (!result.close) applySidebarWidth(root, result.width);
   };
 
   const onPointerUp = (event: PointerEvent) => {
     const drag = dragRef.current;
     if (drag?.pointerId !== event.pointerId) return;
-    const release = releaseDrag(drag.raw);
-    endDrag(event.pointerId, release.collapse ? width : release.width);
-    if (release.collapse) setSidebarRail(true);
-    else setSidebarWidth(release.width);
+    const result = resolveDrag(drag.raw);
+    endDrag(event.pointerId, result.close ? width : result.width);
+    if (result.close) setSidebarHidden(true);
+    else setSidebarWidth(result.width);
   };
 
   const onPointerCancel = (event: PointerEvent) => {

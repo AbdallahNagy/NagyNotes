@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  clampSidebarWidth,
-  dragPreviewWidth,
-  releaseDrag,
-  SIDEBAR_WIDTH,
-} from '@/lib/client/sidebar-width';
+import { clampSidebarWidth, resolveDrag, SIDEBAR_WIDTH } from '@/lib/client/sidebar-width';
 
 describe('clampSidebarWidth', () => {
   it('keeps widths inside the allowed range and rounds', () => {
@@ -14,25 +9,21 @@ describe('clampSidebarWidth', () => {
   });
 });
 
-describe('dragPreviewWidth', () => {
-  it('follows the pointer between the rail width and the maximum', () => {
-    expect(dragPreviewWidth(300)).toBe(300);
-    expect(dragPreviewWidth(10)).toBe(SIDEBAR_WIDTH.dragFloor);
-    expect(dragPreviewWidth(2000)).toBe(SIDEBAR_WIDTH.max);
-  });
-});
-
-describe('releaseDrag', () => {
-  it('collapses to the rail below the threshold', () => {
-    expect(releaseDrag(179)).toEqual({ collapse: true });
+describe('resolveDrag', () => {
+  it('closes the sidebar once the pointer goes past the threshold', () => {
+    expect(resolveDrag(SIDEBAR_WIDTH.closeBelow - 1)).toEqual({ close: true });
+    expect(resolveDrag(-40)).toEqual({ close: true });
   });
 
-  it('snaps up to the minimum between the threshold and the minimum', () => {
-    expect(releaseDrag(180)).toEqual({ collapse: false, width: SIDEBAR_WIDTH.min });
+  it('holds at the minimum width between the threshold and the minimum', () => {
+    expect(resolveDrag(SIDEBAR_WIDTH.closeBelow)).toEqual({
+      close: false,
+      width: SIDEBAR_WIDTH.min,
+    });
   });
 
   it('keeps an in-range width and caps the maximum', () => {
-    expect(releaseDrag(350)).toEqual({ collapse: false, width: 350 });
-    expect(releaseDrag(700)).toEqual({ collapse: false, width: SIDEBAR_WIDTH.max });
+    expect(resolveDrag(350)).toEqual({ close: false, width: 350 });
+    expect(resolveDrag(700)).toEqual({ close: false, width: SIDEBAR_WIDTH.max });
   });
 });

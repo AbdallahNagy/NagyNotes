@@ -115,21 +115,21 @@ test.describe('theme and reading settings', () => {
     await expect(theme.getByRole('radio', { name: 'Dark' })).toBeFocused();
   });
 
-  test('the sidebar collapses to a rail and remembers it', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'The rail is a desktop layout');
+  test('the sidebar hides completely and remembers it', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'Hiding the sidebar is a desktop layout');
     await page.goto('/');
     const sidebar = page.locator('#sidebar');
     await expect(sidebar).toHaveCSS('width', '280px');
+    await expect(page.getByRole('button', { name: 'Show sidebar' })).toBeHidden();
 
-    await page.getByRole('button', { name: 'Hide folders' }).click();
-    await expect(page.locator('html')).toHaveAttribute('data-rail', '');
-    await expect(sidebar).toHaveCSS('width', '52px');
+    await page.getByRole('button', { name: 'Hide sidebar' }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-sidebar-hidden', '');
+    await expect(sidebar).toHaveCSS('width', '0px');
 
     await page.reload();
-    await expect(sidebar).toHaveCSS('width', '52px');
+    await expect(sidebar).toHaveCSS('width', '0px');
 
-    await page.getByRole('button', { name: 'Filter posts' }).click();
+    await page.getByRole('button', { name: 'Show sidebar' }).click();
     await expect(sidebar).toHaveCSS('width', '280px');
-    await expect(page.getByRole('searchbox', { name: 'Filter posts' })).toBeFocused();
   });
 });

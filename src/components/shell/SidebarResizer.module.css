@@ -32,7 +32,7 @@
     display: block;
   }
 
-  :global(html[data-rail]) .handle {
+  :global(html[data-sidebar-hidden]) .handle {
     display: none;
   }
 }

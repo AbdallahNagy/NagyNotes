@@ -11,7 +11,7 @@ interface TreeControlsProps {
   onViewChange: (view: SidebarView) => void;
 }
 
-const BUTTON = { size: 32, iconSize: 16 } as const;
+const BUTTON = { size: 28, iconSize: 15 } as const;
 
 /** Expand / collapse buttons (tree view only) and the Tree | Flat toggle. */
 export function TreeControls({

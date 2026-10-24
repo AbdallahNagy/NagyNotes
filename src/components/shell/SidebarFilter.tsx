@@ -1,19 +1,16 @@
-import type { Ref } from 'preact';
 import { Icon } from '@/components/ui/Icon';
 import styles from './SidebarFilter.module.css';
 
 interface SidebarFilterProps {
   value: string;
   onInput: (value: string) => void;
-  inputRef: Ref<HTMLInputElement>;
 }
 
-export function SidebarFilter({ value, onInput, inputRef }: SidebarFilterProps) {
+export function SidebarFilter({ value, onInput }: SidebarFilterProps) {
   return (
     <label class={styles.filter}>
       <Icon name="magnifying-glass" size={15} />
       <input
-        ref={inputRef}
         type="search"
         class={styles.input}
         value={value}

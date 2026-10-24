@@ -4,7 +4,7 @@ import { scrollMainTo } from './scroll';
 import { $drawerOpen, $settingsOpen } from './ui-state';
 
 const LOADED_ATTRIBUTE = 'data-loaded';
-const RAIL_ATTRIBUTE = 'data-rail';
+const SIDEBAR_HIDDEN_ATTRIBUTE = 'data-sidebar-hidden';
 
 export function applySidebarWidth(root: HTMLElement, width: number): void {
   root.style.setProperty('--sidebar-width', `${width}px`);
@@ -13,7 +13,7 @@ export function applySidebarWidth(root: HTMLElement, width: number): void {
 function syncDocument(root: HTMLElement): void {
   const sidebar = $sidebar.get();
   applyPrefs(root, $prefs.get());
-  root.toggleAttribute(RAIL_ATTRIBUTE, sidebar.rail);
+  root.toggleAttribute(SIDEBAR_HIDDEN_ATTRIBUTE, sidebar.hidden);
   applySidebarWidth(root, sidebar.width);
 }
 

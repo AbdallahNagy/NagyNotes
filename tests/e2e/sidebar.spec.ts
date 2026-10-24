@@ -46,14 +46,26 @@ test.describe('resizable sidebar', () => {
     await expectWidth(page, 220);
   });
 
-  test('dragging narrow snaps to the rail and restores the last width', async ({ page }) => {
+  test('dragging past the minimum closes it, and Show sidebar restores the width', async ({
+    page,
+  }) => {
     await dragTo(page, 350);
     await dragTo(page, 100);
-    await expect(page.locator('html')).toHaveAttribute('data-rail', '');
-    await expectWidth(page, 52);
+    await expect(page.locator('html')).toHaveAttribute('data-sidebar-hidden', '');
+    await expectWidth(page, 0);
 
-    await page.getByRole('button', { name: 'Show folders' }).click();
+    await page.getByRole('button', { name: 'Show sidebar' }).click();
     await expectWidth(page, 350);
+  });
+
+  test('the tree controls do not overlap the first folder row', async ({ page }) => {
+    const gap = await page.evaluate(() => {
+      const controls = document.querySelector('[role="group"][aria-label="Folder view"]');
+      const firstRow = document.querySelector('nav[aria-label="Folders"] li');
+      if (!controls || !firstRow) throw new Error('Missing tree controls or rows');
+      return firstRow.getBoundingClientRect().top - controls.getBoundingClientRect().bottom;
+    });
+    expect(gap).toBeGreaterThanOrEqual(4);
   });
 
   test('the handle works from the keyboard and resets on double-click', async ({ page }) => {

@@ -29,6 +29,9 @@ content (client navigation). The Folders nav now has duplicate links.
 ## 2. Resizable sidebar (desktop ≥ 760px only)
 
 Owner decision: **drag handle; dragging narrow snaps to the existing 52px icon rail.**
+
+> **Superseded:** the owner later dropped the icon rail. Dragging below 160px (or the hide
+> button) now closes the sidebar completely, and a header button brings it back.
 - A vertical drag handle on the sidebar's right edge (6–8px hit area over the 1px border;
   `cursor: col-resize`; accent-coloured line on hover/drag). `role="separator"`,
   `aria-orientation="vertical"`, `aria-valuenow/min/max`, focusable; ← / → change width by 16px,

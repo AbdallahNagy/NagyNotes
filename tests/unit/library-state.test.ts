@@ -88,14 +88,14 @@ describe('sidebar', () => {
     expect(state.$sidebar.get().expanded).toEqual(['a', 'c', 'a/b']);
   });
 
-  it('collapses everything and remembers the rail', async () => {
+  it('collapses everything and remembers a hidden sidebar', async () => {
     const state = await loadState();
     state.expandFolders(['a']);
-    state.setSidebarRail(true);
+    state.setSidebarHidden(true);
     state.collapseAllFolders();
     expect(state.$sidebar.get()).toEqual({
       expanded: [],
-      rail: true,
+      hidden: true,
       width: 280,
       view: 'tree',
     });
@@ -136,10 +136,10 @@ describe('sidebar view and levels', () => {
 });
 
 describe('sidebar width', () => {
-  it('stores a clamped width and keeps it across the rail', async () => {
+  it('stores a clamped width and keeps it while hidden', async () => {
     const state = await loadState();
     state.setSidebarWidth(350);
-    state.setSidebarRail(true);
+    state.setSidebarHidden(true);
     expect(state.$sidebar.get().width).toBe(350);
 
     state.setSidebarWidth(9999);
@@ -161,14 +161,14 @@ describe('corrupt storage', () => {
       [STORAGE_KEYS.bookmarks]: '{not json',
       [STORAGE_KEYS.recent]: '[1,2]',
       [STORAGE_KEYS.progress]: '"text"',
-      [STORAGE_KEYS.sidebar]: '{"expanded":"x","rail":"yes"}',
+      [STORAGE_KEYS.sidebar]: '{"expanded":"x","hidden":"yes"}',
     });
     expect(state.$bookmarks.get()).toEqual([]);
     expect(state.$recent.get()).toEqual([]);
     expect(state.$progress.get()).toEqual({});
     expect(state.$sidebar.get()).toEqual({
       expanded: [],
-      rail: false,
+      hidden: false,
       width: 280,
       view: 'tree',
     });

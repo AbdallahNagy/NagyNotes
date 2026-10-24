@@ -71,7 +71,7 @@ const prefsScriptVars = {
           }
         }
         const sidebar = JSON.parse(localStorage.getItem(keys.sidebar) ?? 'null');
-        if (sidebar && sidebar.rail === true) root.setAttribute('data-rail', '');
+        if (sidebar && sidebar.hidden === true) root.setAttribute('data-sidebar-hidden', '');
         if (sidebar && Number.isFinite(sidebar.width)) {
           const width = Math.min(widthRange.max, Math.max(widthRange.min, sidebar.width));
           root.style.setProperty('--sidebar-width', width + 'px');

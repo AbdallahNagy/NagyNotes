@@ -13,27 +13,6 @@
   min-height: 0;
 }
 
-.rail {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding-top: 12px;
-}
-
-.railLink {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-md);
-  color: var(--ink-2);
-}
-
-.railLink:hover {
-  background: var(--hover);
-}
-
 .top {
   display: flex;
   flex: none;
@@ -78,7 +57,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 8px 6px;
+  min-height: 28px;
+  margin: 14px 8px 8px;
 }
 
 .scrim {
@@ -94,25 +74,35 @@
     transition: width var(--motion-sidebar);
   }
 
+  /* Keeps the content at full width while the sidebar animates closed, so nothing reflows. */
+  .full {
+    width: var(--sidebar-width);
+  }
+
   .closeDrawer {
     display: none;
   }
 
-  :global(html[data-resizing]) .sidebar {
+  /* Follows the pointer exactly, except when a drag past the minimum closes it. */
+  :global(html[data-resizing]:not([data-sidebar-closing])) .sidebar {
     transition: none;
+  }
+
+  :global(html[data-resizing]) .sidebar {
     user-select: none;
   }
 
-  :global(html[data-rail]) .sidebar {
-    width: var(--sidebar-rail-width);
+  :global(html[data-sidebar-hidden]) .sidebar,
+  :global(html[data-sidebar-closing]) .sidebar {
+    width: 0;
+    border-right-width: 0;
   }
 
-  :global(html[data-rail]) .full {
-    display: none;
-  }
-
-  :global(html[data-rail]) .rail {
-    display: flex;
+  :global(html[data-sidebar-hidden]) .sidebar {
+    visibility: hidden;
+    transition:
+      width var(--motion-sidebar),
+      visibility 0s linear var(--motion-sidebar);
   }
 }
 

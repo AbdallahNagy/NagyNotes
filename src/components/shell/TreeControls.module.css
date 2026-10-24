@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  margin: -6px -4px;
+  margin-right: -4px;
 }
 
 .button {

@@ -1,6 +1,5 @@
 import { useStore } from '@nanostores/preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
 import {
   $bookmarks,
@@ -10,7 +9,7 @@ import {
   collapseAllFolders,
   expandFolders,
   expandNextLevel,
-  setSidebarRail,
+  setSidebarHidden,
   setSidebarView,
   toggleFolder,
   type SidebarState,
@@ -46,12 +45,11 @@ interface SidebarProps {
 export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
   const [currentPath, setCurrentPath] = useState(normalizePath(initialPath));
   const [query, setQuery] = useState('');
-  const filterRef = useRef<HTMLInputElement>(null);
   const matches = useSearch(query, index);
   const serverState = useMemo<SidebarState>(
     () => ({
       expanded: foldersToReveal(tree, initialPath),
-      rail: false,
+      hidden: false,
       width: SIDEBAR_WIDTH.default,
       view: 'tree',
     }),
@@ -78,11 +76,6 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
     document.addEventListener('astro:page-load', reveal);
     return () => document.removeEventListener('astro:page-load', reveal);
   }, [tree]);
-
-  const expandAndFilter = () => {
-    setSidebarRail(false);
-    requestAnimationFrame(() => filterRef.current?.focus());
-  };
 
   const expanded = useMemo(() => new Set(sidebar.expanded), [sidebar.expanded]);
   const flatPosts = useMemo(() => flatPostsNewestFirst(index), [index]);
@@ -111,11 +104,11 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
             <span class={styles.heading}>Library</span>
             <IconButton
               icon="caret-double-left"
-              label="Hide folders"
+              label="Hide sidebar"
               size={32}
               iconSize={17}
               class={styles.collapse}
-              onClick={() => setSidebarRail(true)}
+              onClick={() => setSidebarHidden(true)}
             />
             <IconButton
               data-drawer-close
@@ -128,7 +121,7 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
             />
           </div>
           <div class={styles.filterBox}>
-            <SidebarFilter value={query} onInput={setQuery} inputRef={filterRef} />
+            <SidebarFilter value={query} onInput={setQuery} />
           </div>
           <div class={styles.scroll}>
             {matches === null && <RecentList entries={recentEntries} />}
@@ -167,17 +160,6 @@ export default function Sidebar({ tree, index, initialPath }: SidebarProps) {
               )}
             </nav>
           </div>
-        </div>
-        <div class={styles.rail}>
-          <IconButton
-            icon="sidebar-simple"
-            label="Show folders"
-            onClick={() => setSidebarRail(false)}
-          />
-          <IconButton icon="magnifying-glass" label="Filter posts" onClick={expandAndFilter} />
-          <a class={styles.railLink} href="/" aria-label="Home" title="Home">
-            <Icon name="house" size={18} />
-          </a>
         </div>
         <SidebarResizer width={sidebar.width} />
       </aside>
