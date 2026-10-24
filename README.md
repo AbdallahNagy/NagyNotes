@@ -126,6 +126,22 @@ Cloudflare Pages, Azure Static Web Apps, GitHub Pages). Use `pnpm build` as the 
 The build also produces `sitemap-index.xml`, `rss.xml` and the Pagefind index (`dist/pagefind`).
 Unknown URLs are served `404.html` by most hosts.
 
+### Cloudflare Pages (CI)
+
+The `deploy` job in `.github/workflows/ci.yml` builds and deploys to Cloudflare Pages on every push
+to `main`, once lint, tests and e2e pass. Pull requests never deploy. One-time setup:
+
+1. Create a Pages project in Cloudflare (Workers & Pages → Create → Pages → Direct Upload), or run
+   `pnpm dlx wrangler pages project create <name> --production-branch=main`.
+2. Create an API token with the **Cloudflare Pages: Edit** permission.
+3. In the GitHub repo (Settings → Secrets and variables → Actions) add:
+   - Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+   - Variables: `CLOUDFLARE_PAGES_PROJECT` (the project name), `SITE_URL`, and optionally
+     `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_ANON_KEY`
+
+The job runs in a `production` GitHub environment, so you can add required reviewers there if you
+want to approve each deploy.
+
 ## Project layout
 
 ```
