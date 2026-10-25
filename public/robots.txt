@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nagynotes.example.com/sitemap-index.xml
+Sitemap: https://nagynotes.abdallahnagy.com/sitemap-index.xml
